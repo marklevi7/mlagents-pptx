@@ -1,0 +1,1482 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0d0c0b">
+<meta name="color-scheme" content="dark">
+<title>Digital Employees — MLDI</title>
+<style>
+  :root {
+    --bg: #0d0c0b;
+    --text: #f5f2ef;
+    --soft: #d8d4cf;
+    --muted: #9a9691;
+    --dim: #787470;
+    --faint: #2a2825;
+    --line: #1d1b19;
+    --line-2: #272523;
+  }
+  *, *::before, *::after { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; height: 100%; background: var(--bg); }
+  body {
+    color: var(--text);
+    font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    overflow: hidden;
+    text-rendering: optimizeLegibility;
+  }
+  a { color: inherit; }
+
+  .deck { position: fixed; inset: 0; overflow: hidden; }
+
+  .slide {
+    position: absolute; inset: 0;
+    display: grid;
+    justify-items: center;
+    align-items: start;
+    padding: clamp(72px, 12vh, 140px) clamp(28px, 6vw, 96px) clamp(40px, 8vh, 100px);
+    opacity: 0; visibility: hidden;
+    transition: opacity 220ms ease;
+  }
+  .slide.active { opacity: 1; visibility: visible; }
+  /* Slides that benefit from vertical centering (cover, Meet faces, closing, short-content) */
+  .slide.cover, .slide.meet, .slide.close, .slide.vcenter {
+    align-items: center;
+    padding: clamp(28px, 6vw, 96px);
+  }
+  .slide-inner { width: 100%; max-width: 1200px; margin-left: auto; margin-right: auto; }
+  .wide .slide-inner { max-width: 1200px; }
+
+  /* TYPOGRAPHY */
+  .eyebrow {
+    color: var(--soft);
+    font-size: clamp(12px, 1.15vw, 15px);
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    font-weight: 700;
+    margin-bottom: clamp(18px, 2.2vw, 32px);
+  }
+  h1 {
+    font-size: clamp(44px, 9vw, 132px);
+    font-weight: 600;
+    letter-spacing: -0.035em;
+    line-height: 0.98;
+    margin: 0;
+    color: var(--text);
+  }
+  h2 {
+    font-size: clamp(28px, 5.2vw, 76px);
+    font-weight: 500;
+    letter-spacing: -0.025em;
+    line-height: 1.05;
+    margin: 0 0 clamp(20px, 2.5vw, 36px);
+    color: var(--text);
+  }
+  p {
+    font-size: clamp(17px, 2vw, 26px);
+    line-height: 1.5;
+    color: var(--soft);
+    margin: 0;
+    max-width: 64ch;
+  }
+  p + p { margin-top: clamp(14px, 1.6vw, 22px); }
+  .lead { font-size: clamp(20px, 2.6vw, 34px); color: var(--text); line-height: 1.35; max-width: 28ch; font-weight: 400; }
+  .center .lead, .center p { margin-left: auto; margin-right: auto; }
+  .body { color: var(--muted); }
+  .dim { color: var(--dim); }
+  .soft { color: var(--soft); }
+  .center { text-align: center; }
+  .stack > * + * { margin-top: clamp(16px, 2vw, 28px); }
+
+  /* AURORA GLOW */
+  .aurora-bottom, .aurora-top {
+    position: absolute;
+    left: 0; right: 0;
+    height: 40%;
+    pointer-events: none;
+    z-index: 0;
+  }
+  .aurora-bottom {
+    bottom: -5%;
+    left: -10%; right: -10%;
+    background:
+      /* v111 base — spread fingers */
+      radial-gradient(ellipse 8% 95% at 12% 100%, rgba(80, 0, 160, 0.9) 0%, transparent 55%),
+      radial-gradient(ellipse 12% 70% at 20% 100%, rgba(100, 20, 190, 0.7) 0%, transparent 50%),
+      radial-gradient(ellipse 6% 85% at 30% 100%, rgba(60, 10, 150, 0.6) 0%, transparent 45%),
+      radial-gradient(ellipse 10% 100% at 38% 100%, rgba(70, 0, 200, 0.8) 0%, transparent 50%),
+      radial-gradient(ellipse 5% 55% at 48% 100%, rgba(40, 30, 140, 0.5) 0%, transparent 40%),
+      radial-gradient(ellipse 14% 80% at 60% 100%, rgba(20, 50, 200, 0.65) 0%, transparent 48%),
+      radial-gradient(ellipse 8% 95% at 72% 100%, rgba(25, 70, 230, 0.85) 0%, transparent 50%),
+      radial-gradient(ellipse 10% 65% at 82% 100%, rgba(30, 100, 255, 0.7) 0%, transparent 45%),
+      radial-gradient(ellipse 6% 80% at 90% 100%, rgba(40, 130, 255, 0.6) 0%, transparent 42%),
+      /* deep dark blobs between the bright fingers */
+      radial-gradient(ellipse 10% 60% at 16% 100%, rgba(20, 0, 60, 0.9) 0%, transparent 50%),
+      radial-gradient(ellipse 8% 50% at 34% 100%, rgba(15, 0, 50, 0.8) 0%, transparent 45%),
+      radial-gradient(ellipse 12% 45% at 52% 100%, rgba(10, 5, 40, 0.85) 0%, transparent 48%),
+      radial-gradient(ellipse 9% 55% at 68% 100%, rgba(5, 10, 50, 0.8) 0%, transparent 45%),
+      radial-gradient(ellipse 8% 40% at 86% 100%, rgba(8, 15, 55, 0.7) 0%, transparent 42%),
+      /* big horizontal washes */
+      radial-gradient(ellipse 50% 45% at 22% 95%, rgba(100, 0, 200, 0.4) 0%, transparent 60%),
+      radial-gradient(ellipse 55% 40% at 55% 98%, rgba(40, 30, 190, 0.35) 0%, transparent 55%),
+      radial-gradient(ellipse 45% 45% at 82% 95%, rgba(20, 80, 250, 0.35) 0%, transparent 55%);
+    filter: blur(35px);
+  }
+  .aurora-bottom::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 30%;
+    background:
+      radial-gradient(ellipse 6% 100% at 14% 100%, rgba(130, 0, 255, 0.95) 0%, transparent 50%),
+      radial-gradient(ellipse 8% 100% at 36% 100%, rgba(90, 0, 210, 0.85) 0%, transparent 45%),
+      radial-gradient(ellipse 5% 80% at 58% 100%, rgba(30, 50, 200, 0.7) 0%, transparent 40%),
+      radial-gradient(ellipse 7% 100% at 74% 100%, rgba(25, 80, 255, 0.95) 0%, transparent 48%),
+      radial-gradient(ellipse 5% 70% at 88% 100%, rgba(40, 140, 255, 0.75) 0%, transparent 42%);
+    filter: blur(12px);
+  }
+  .aurora-top {
+    top: -5%;
+    left: -10%; right: -10%;
+    transform: scaleY(-1);
+    background:
+      radial-gradient(ellipse 8% 95% at 12% 100%, rgba(80, 0, 160, 0.9) 0%, transparent 55%),
+      radial-gradient(ellipse 12% 70% at 20% 100%, rgba(100, 20, 190, 0.7) 0%, transparent 50%),
+      radial-gradient(ellipse 6% 85% at 30% 100%, rgba(60, 10, 150, 0.6) 0%, transparent 45%),
+      radial-gradient(ellipse 10% 100% at 38% 100%, rgba(70, 0, 200, 0.8) 0%, transparent 50%),
+      radial-gradient(ellipse 5% 55% at 48% 100%, rgba(40, 30, 140, 0.5) 0%, transparent 40%),
+      radial-gradient(ellipse 14% 80% at 60% 100%, rgba(20, 50, 200, 0.65) 0%, transparent 48%),
+      radial-gradient(ellipse 8% 95% at 72% 100%, rgba(25, 70, 230, 0.85) 0%, transparent 50%),
+      radial-gradient(ellipse 10% 65% at 82% 100%, rgba(30, 100, 255, 0.7) 0%, transparent 45%),
+      radial-gradient(ellipse 6% 80% at 90% 100%, rgba(40, 130, 255, 0.6) 0%, transparent 42%),
+      radial-gradient(ellipse 10% 60% at 16% 100%, rgba(20, 0, 60, 0.9) 0%, transparent 50%),
+      radial-gradient(ellipse 8% 50% at 34% 100%, rgba(15, 0, 50, 0.8) 0%, transparent 45%),
+      radial-gradient(ellipse 12% 45% at 52% 100%, rgba(10, 5, 40, 0.85) 0%, transparent 48%),
+      radial-gradient(ellipse 9% 55% at 68% 100%, rgba(5, 10, 50, 0.8) 0%, transparent 45%),
+      radial-gradient(ellipse 8% 40% at 86% 100%, rgba(8, 15, 55, 0.7) 0%, transparent 42%),
+      radial-gradient(ellipse 50% 45% at 22% 95%, rgba(100, 0, 200, 0.4) 0%, transparent 60%),
+      radial-gradient(ellipse 55% 40% at 55% 98%, rgba(40, 30, 190, 0.35) 0%, transparent 55%),
+      radial-gradient(ellipse 45% 45% at 82% 95%, rgba(20, 80, 250, 0.35) 0%, transparent 55%);
+    filter: blur(35px);
+  }
+  .aurora-top::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 30%;
+    background:
+      radial-gradient(ellipse 6% 100% at 14% 100%, rgba(130, 0, 255, 0.95) 0%, transparent 50%),
+      radial-gradient(ellipse 8% 100% at 36% 100%, rgba(90, 0, 210, 0.85) 0%, transparent 45%),
+      radial-gradient(ellipse 5% 80% at 58% 100%, rgba(30, 50, 200, 0.7) 0%, transparent 40%),
+      radial-gradient(ellipse 7% 100% at 74% 100%, rgba(25, 80, 255, 0.95) 0%, transparent 48%),
+      radial-gradient(ellipse 5% 70% at 88% 100%, rgba(40, 140, 255, 0.75) 0%, transparent 42%);
+    filter: blur(12px);
+  }
+  .aurora-dim { opacity: 0.5; }
+  .aurora-soft.aurora-bottom {
+    background:
+      radial-gradient(ellipse 50% 55% at 22% 95%, rgba(90, 0, 180, 0.45) 0%, transparent 60%),
+      radial-gradient(ellipse 55% 50% at 55% 98%, rgba(40, 30, 180, 0.4) 0%, transparent 55%),
+      radial-gradient(ellipse 45% 55% at 82% 95%, rgba(20, 80, 250, 0.4) 0%, transparent 55%);
+    filter: blur(60px);
+  }
+  .aurora-soft.aurora-bottom::after { display: none; }
+  .aurora-soft.aurora-top {
+    background:
+      radial-gradient(ellipse 50% 55% at 22% 95%, rgba(90, 0, 180, 0.45) 0%, transparent 60%),
+      radial-gradient(ellipse 55% 50% at 55% 98%, rgba(40, 30, 180, 0.4) 0%, transparent 55%),
+      radial-gradient(ellipse 45% 55% at 82% 95%, rgba(20, 80, 250, 0.4) 0%, transparent 55%);
+    filter: blur(60px);
+  }
+  .aurora-soft.aurora-top::after { display: none; }
+  .cover .brand {
+    color: var(--soft);
+    font-size: clamp(22px, 2.6vw, 36px);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    font-weight: 600;
+    margin-bottom: clamp(28px, 4vw, 56px);
+  }
+  .cover h1 { letter-spacing: -0.04em; }
+  .bg-halftone {
+    position: absolute;
+    left: 0;
+    right: 0;
+    width: 100%;
+    height: 25%;
+    pointer-events: none;
+    z-index: 0;
+    color: var(--text);
+  }
+  .bg-halftone.bottom { bottom: 0; }
+  .bg-halftone.top { top: 0; }
+  .cover .slide-inner { position: relative; z-index: 1; }
+  .cover .tag {
+    color: var(--muted);
+    font-weight: 600;
+    font-size: clamp(11px, 1vw, 13px);
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    margin-top: clamp(28px, 4vw, 48px);
+  }
+
+  /* HOOK */
+  .hook {
+    font-size: clamp(28px, 5.4vw, 72px);
+    font-weight: 400;
+    letter-spacing: -0.02em;
+    line-height: 1.15;
+    color: var(--text);
+    max-width: 22ch;
+    margin: 0;
+  }
+
+  /* MEET X */
+  .meet h1 { font-size: clamp(72px, 14vw, 200px); letter-spacing: -0.045em; }
+  .meet .role {
+    color: var(--muted);
+    font-size: clamp(20px, 2.6vw, 36px);
+    margin-top: clamp(10px, 1.2vw, 18px);
+    letter-spacing: -0.01em;
+  }
+  .meet .eyebrow { margin-bottom: clamp(14px, 1.6vw, 22px); }
+
+  /* ICONS */
+  .face-lg {
+    width: clamp(140px, 16vw, 220px);
+    aspect-ratio: 120 / 140;
+    height: auto;
+    color: var(--text);
+    display: block;
+    margin: 0 auto clamp(18px, 2.2vw, 32px);
+  }
+  .face-sm {
+    width: clamp(76px, 9vw, 116px);
+    aspect-ratio: 120 / 140;
+    height: auto;
+    color: var(--soft);
+    display: block;
+  }
+  .face-mini {
+    width: clamp(38px, 4.2vw, 56px);
+    aspect-ratio: 120 / 140;
+    height: auto;
+    color: var(--soft);
+    display: block;
+    flex-shrink: 0;
+  }
+  .face-avatar {
+    width: clamp(110px, 12vw, 160px);
+    height: clamp(110px, 12vw, 160px);
+    border: 2px solid var(--line-2);
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.03);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto clamp(18px, 2.2vw, 32px);
+  }
+  .face-avatar svg {
+    width: 60%;
+    height: 70%;
+    color: var(--soft);
+    display: block;
+  }
+  .mlc-mark {
+    width: clamp(120px, 15vw, 228px);
+    height: auto;
+    aspect-ratio: 760 / 300;
+    color: var(--text);
+    display: block;
+    margin: 0 auto;
+  }
+  .ic-sm { width: clamp(22px, 2.2vw, 30px); height: clamp(22px, 2.2vw, 30px); color: var(--soft); flex-shrink: 0; }
+  .ic-md { width: clamp(28px, 3vw, 42px); height: clamp(28px, 3vw, 42px); color: var(--text); }
+
+  /* eyebrow + small face badge inline */
+  .eyebrow-row {
+    display: flex;
+    align-items: center;
+    gap: clamp(12px, 1.4vw, 18px);
+    margin-bottom: clamp(18px, 2.2vw, 32px);
+  }
+  .eyebrow-row .eyebrow { margin-bottom: 0; }
+
+  /* ANIMATED CLOCK */
+  .clock-anim {
+    width: clamp(56px, 6vw, 92px);
+    height: clamp(56px, 6vw, 92px);
+    color: var(--text);
+    display: block;
+    margin: 0 auto clamp(18px, 2.4vw, 32px);
+  }
+
+  /* ANIMATED HOURGLASS */
+  .hg-anim {
+    width: clamp(56px, 6vw, 92px);
+    height: auto;
+    aspect-ratio: 32 / 48;
+    color: var(--soft);
+    display: block;
+    overflow: visible;
+  }
+
+  /* FAMILY ROW */
+  .family {
+    display: flex;
+    gap: clamp(18px, 4vw, 60px);
+    justify-content: center;
+    align-items: end;
+    margin: clamp(22px, 3.5vw, 48px) 0;
+    flex-wrap: wrap;
+  }
+  .family-item { text-align: center; }
+  .family-item .name {
+    color: var(--muted);
+    font-size: clamp(13px, 1.3vw, 17px);
+    margin-top: 10px;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    font-weight: 600;
+  }
+
+  /* PLATFORM ROW */
+  .platforms {
+    display: flex;
+    gap: clamp(22px, 4vw, 56px);
+    margin-top: clamp(20px, 2.6vw, 32px);
+    flex-wrap: wrap;
+  }
+  .center .platforms { justify-content: center; }
+  .platform {
+    display: flex; align-items: center; gap: 12px;
+    color: var(--text);
+    font-size: clamp(15px, 1.6vw, 22px);
+    font-weight: 500;
+  }
+
+  /* ICON LIST */
+  ul.icon-list {
+    list-style: none; padding: 0; margin: 0;
+    display: grid; gap: clamp(14px, 1.6vw, 20px);
+  }
+  ul.icon-list li {
+    display: flex; align-items: center;
+    gap: clamp(14px, 1.6vw, 22px);
+    font-size: clamp(18px, 2.2vw, 28px);
+    color: var(--soft);
+  }
+
+  /* PROOF BARS */
+  .proof-bars {
+    display: grid;
+    gap: clamp(16px, 2vw, 24px);
+    margin: clamp(20px, 2.6vw, 32px) 0 0;
+    max-width: 620px;
+  }
+  .proof-bars .row {
+    display: grid;
+    grid-template-columns: clamp(96px, 11vw, 140px) 1fr;
+    align-items: center;
+    gap: clamp(16px, 2vw, 24px);
+  }
+  .proof-bars .label {
+    color: var(--text);
+    font-variant-numeric: tabular-nums;
+    font-size: clamp(20px, 2.2vw, 30px);
+    font-weight: 500;
+  }
+  .proof-bars .bar {
+    display: block;
+    height: clamp(22px, 2.6vw, 34px);
+    background: var(--text);
+    border-radius: 2px;
+  }
+  .proof-bars .bar.dim { background: var(--faint); }
+
+  /* STEPS (process) */
+  ol.steps {
+    list-style: none; padding: 0; margin: 0;
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: clamp(14px, 1.8vw, 28px);
+    position: relative;
+  }
+  ol.steps::before {
+    content: '';
+    position: absolute;
+    left: 18px; right: 18px;
+    top: 18px;
+    height: 2px;
+    background: var(--line-2);
+    z-index: 0;
+  }
+  ol.steps li { position: relative; z-index: 1; }
+  ol.steps .num {
+    display: flex; align-items: center; justify-content: center;
+    width: clamp(32px, 3.4vw, 40px);
+    height: clamp(32px, 3.4vw, 40px);
+    border-radius: 50%;
+    background: var(--bg);
+    border: 2px solid var(--text);
+    color: var(--text);
+    font-weight: 600;
+    font-size: clamp(14px, 1.3vw, 17px);
+    font-variant-numeric: tabular-nums;
+    margin-bottom: clamp(14px, 1.6vw, 20px);
+  }
+  ol.steps .name {
+    color: var(--text);
+    font-weight: 600;
+    font-size: clamp(15px, 1.5vw, 20px);
+    margin-bottom: clamp(6px, 0.8vw, 10px);
+    line-height: 1.2;
+  }
+  ol.steps .desc {
+    color: var(--muted);
+    font-size: clamp(13px, 1.2vw, 17px);
+    line-height: 1.4;
+  }
+  @media (max-width: 760px) {
+    ol.steps { grid-template-columns: 1fr; gap: clamp(14px, 2vw, 18px); }
+    ol.steps::before { display: none; }
+    ol.steps li { display: grid; grid-template-columns: 36px 1fr; column-gap: 16px; row-gap: 2px; }
+    ol.steps li:not(:last-child)::before {
+      content: '';
+      position: absolute;
+      left: 15px;
+      width: 2px;
+      top: 16px;
+      bottom: calc(-1 * (clamp(14px, 2vw, 18px) + 16px));
+      background: var(--line-2);
+      z-index: 0;
+    }
+    ol.steps .num { margin-bottom: 0; grid-row: span 2; align-self: start; position: relative; z-index: 1; }
+    ol.steps .name { grid-column: 2; }
+    ol.steps .desc { grid-column: 2; }
+  }
+
+  /* TABLES */
+  table {
+    width: 100%; border-collapse: collapse;
+    margin: 0; color: var(--soft);
+  }
+  table caption { display: none; }
+  table th { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); border: 0; }
+  table td {
+    padding: clamp(11px, 1.3vw, 18px) clamp(8px, 1vw, 16px);
+    border-top: 1px solid var(--line);
+    font-size: clamp(15px, 1.7vw, 22px);
+    vertical-align: top;
+    text-align: left;
+    line-height: 1.4;
+  }
+  table tr:first-child td { border-top: 0; }
+  table tr:last-child td { border-bottom: 1px solid var(--line); }
+  td.k { color: var(--muted); width: 38%; padding-left: 0; }
+  td.v { color: var(--text); font-variant-numeric: tabular-nums; }
+  td.stage { color: var(--text); font-weight: 600; width: 20%; padding-left: 0; }
+  td.desc { color: var(--muted); }
+  td.time { color: var(--text); font-variant-numeric: tabular-nums; text-align: right; white-space: nowrap; width: 18%; }
+  td.price { color: var(--text); font-variant-numeric: tabular-nums; text-align: right; padding-right: 0; white-space: nowrap; width: 18%; }
+  .placeholder { color: var(--dim); }
+
+  @media (max-width: 640px) {
+    td { padding: 10px 6px; font-size: 14px; }
+    td.k, td.stage { width: 36%; }
+    td.price { width: auto; }
+  }
+
+  /* HUMAN vs AI comparison table */
+  table.vs { width: 100%; border-collapse: collapse; margin-top: clamp(20px, 2.4vw, 36px); }
+  table.vs th {
+    display: table-cell;
+    text-align: right;
+    padding: 0 clamp(8px, 1vw, 16px) clamp(10px, 1.2vw, 16px);
+    border-bottom: 1px solid var(--line-2);
+    color: var(--muted);
+    font-weight: 700;
+    font-size: clamp(11px, 1vw, 13px);
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+  }
+  table.vs th.cat { text-align: left; padding-left: 0; }
+  table.vs th.ai { padding-right: 0; color: var(--text); }
+  table.vs td {
+    padding: clamp(14px, 1.7vw, 24px) clamp(8px, 1vw, 16px);
+    font-size: clamp(17px, 2vw, 26px);
+    border-top: 1px solid var(--line);
+    vertical-align: middle;
+    font-variant-numeric: tabular-nums;
+  }
+  table.vs tr:first-child td { border-top: 0; }
+  table.vs td.cat {
+    color: var(--text);
+    font-weight: 500;
+    padding-left: 0;
+    font-variant-numeric: normal;
+  }
+  table.vs td.human { color: var(--muted); text-align: right; text-decoration: line-through; text-decoration-thickness: 1px; text-decoration-color: var(--dim); }
+  table.vs td.ai    { color: var(--text); font-weight: 600; text-align: right; padding-right: 0; }
+  table.vs .cat-row { display: inline-flex; align-items: center; gap: clamp(10px, 1.2vw, 16px); }
+  table.vs .cat-row .ic-sm { color: var(--soft); }
+  @media (max-width: 560px) {
+    table.vs td, table.vs th { font-size: 14px; padding: 12px 8px; }
+    table.vs th { font-size: 10px; letter-spacing: 0.15em; }
+  }
+
+  /* COMPLIANCE BADGES */
+  .badges {
+    display: flex;
+    flex-wrap: wrap;
+    gap: clamp(8px, 1vw, 12px);
+    margin-top: clamp(4px, 0.8vw, 10px);
+  }
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    gap: clamp(8px, 1vw, 12px);
+    padding: clamp(8px, 1vw, 12px) clamp(12px, 1.4vw, 18px);
+    border: 1px solid var(--line-2);
+    border-radius: clamp(8px, 0.9vw, 12px);
+    color: var(--text);
+    font-size: clamp(13px, 1.3vw, 17px);
+    font-weight: 500;
+    letter-spacing: 0.01em;
+    white-space: nowrap;
+  }
+
+  /* DEPLOYMENT OPTIONS */
+  .deploy {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: clamp(10px, 1.2vw, 16px);
+    margin-top: clamp(10px, 1.2vw, 16px);
+  }
+  .deploy-item {
+    display: flex;
+    align-items: center;
+    gap: clamp(10px, 1.2vw, 16px);
+    padding: clamp(10px, 1.1vw, 14px) clamp(12px, 1.3vw, 18px);
+    border: 1px solid var(--line);
+    border-radius: clamp(8px, 0.8vw, 12px);
+  }
+  .ic-deploy {
+    width: clamp(20px, 1.9vw, 26px);
+    height: clamp(20px, 1.9vw, 26px);
+    color: var(--text);
+    display: block;
+    flex-shrink: 0;
+  }
+  .deploy-label {
+    color: var(--text);
+    font-weight: 700;
+    font-size: clamp(11px, 1vw, 13px);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+  .section-label {
+    color: var(--muted);
+    font-size: clamp(11px, 1vw, 13px);
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    font-weight: 700;
+    margin-top: clamp(20px, 2.4vw, 32px);
+    margin-bottom: clamp(10px, 1.2vw, 16px);
+  }
+  @media (max-width: 720px) {
+    .deploy { grid-template-columns: 1fr; gap: 10px; }
+  }
+
+  /* COST NOTES (three-column clarifier) */
+  .cost-notes {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: clamp(18px, 2.4vw, 36px);
+    margin-top: clamp(22px, 2.8vw, 40px);
+  }
+  .cn-label {
+    color: var(--text);
+    font-size: clamp(12px, 1.1vw, 14px);
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    font-weight: 700;
+    margin-bottom: 8px;
+  }
+  .cn-text {
+    color: var(--soft);
+    font-size: clamp(14px, 1.5vw, 19px);
+    line-height: 1.4;
+  }
+  @media (max-width: 720px) {
+    .cost-notes { grid-template-columns: 1fr; gap: 14px; }
+  }
+
+  /* CTA BUTTON */
+  .cta-phone {
+    display: inline-flex;
+    align-items: center;
+    gap: clamp(10px, 1.2vw, 16px);
+    padding: clamp(14px, 1.7vw, 22px) clamp(22px, 2.8vw, 36px);
+    border: 1px solid var(--faint);
+    border-radius: clamp(12px, 1.2vw, 16px);
+    background: transparent;
+    color: var(--text);
+    font-size: clamp(20px, 2.2vw, 30px);
+    font-weight: 500;
+    font-variant-numeric: tabular-nums;
+    letter-spacing: 0.01em;
+    text-decoration: none;
+    transition: border-color 180ms ease, background 180ms ease, transform 120ms ease;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .cta-phone:hover { border-color: var(--soft); background: rgba(255,255,255,0.04); }
+  .cta-phone:active { transform: translateY(1px); }
+  .cta-phone svg {
+    width: clamp(20px, 2vw, 28px);
+    height: clamp(20px, 2vw, 28px);
+    color: var(--text);
+    flex-shrink: 0;
+  }
+  .brand-line {
+    color: var(--muted);
+    font-size: clamp(13px, 1.3vw, 16px);
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    font-weight: 600;
+  }
+
+  /* CHROME */
+  .progress { position: fixed; top: 0; left: 0; right: 0; height: 2px; z-index: 20; pointer-events: none; }
+  .progress > i { display: block; height: 100%; background: var(--faint); width: 0%; transition: width 220ms ease; }
+  .counter {
+    position: fixed; bottom: 22px; right: 26px;
+    color: var(--muted); font-size: 13px;
+    font-variant-numeric: tabular-nums;
+    z-index: 15; letter-spacing: 0.04em;
+  }
+  .help {
+    position: fixed; bottom: 22px; left: 26px;
+    color: var(--muted); font-size: 12px;
+    z-index: 15;
+  }
+  .help kbd {
+    color: var(--soft);
+    border: 1px solid var(--line-2);
+    border-radius: 4px;
+    padding: 1px 6px;
+    font-family: inherit;
+    font-size: 11px;
+    margin: 0 2px;
+  }
+  .nav-zone { position: fixed; top: 0; bottom: 0; width: 22%; z-index: 10; cursor: pointer; background: transparent; }
+  .nav-zone.prev { left: 0; cursor: w-resize; }
+  .nav-zone.next { right: 0; cursor: e-resize; }
+  @media (max-width: 640px) {
+    .help { display: none; }
+    .counter { bottom: 14px; right: 16px; }
+
+    /* Brighter, thicker progress bar on mobile */
+    .progress { height: 3px; }
+    .progress > i { background: var(--dim); }
+
+    /* More air between stacked elements */
+    .stack > * + * { margin-top: clamp(18px, 3.6vw, 26px); }
+
+    /* Slightly tighter content padding so titles breathe but content uses width */
+    .slide { padding-left: 22px; padding-right: 22px; padding-top: clamp(64px, 10vh, 110px); }
+
+    /* Smaller Meet face on phones so the name dominates */
+    .face-lg { width: clamp(108px, 30vw, 160px); margin-bottom: clamp(14px, 2.6vw, 22px); }
+    .meet h1 { font-size: clamp(64px, 17vw, 110px); }
+    .meet .role { font-size: clamp(17px, 4.4vw, 24px); }
+
+    /* Family row stays single line on mobile */
+    .family {
+      display: flex;
+      gap: clamp(18px, 5vw, 32px);
+      justify-content: center;
+      align-items: end;
+    }
+    .face-sm { width: clamp(56px, 16vw, 86px); }
+
+    /* Eyebrow + mini-head row sits tighter */
+    .eyebrow-row { gap: 10px; }
+    .face-mini { width: clamp(34px, 9vw, 46px); }
+
+    /* Hook copy reads better with one less line break */
+    .hook { font-size: clamp(26px, 7.2vw, 40px); max-width: 18ch; }
+
+    /* Cost-table rows stack the description below the stage+price on phones */
+    .slide.wide tr:has(td.stage) {
+      display: grid;
+      grid-template-columns: 1fr auto auto;
+      column-gap: 10px;
+      row-gap: 4px;
+      padding: 14px 0;
+      border-top: 1px solid var(--line);
+    }
+    .slide.wide tr:has(td.stage):first-child { border-top: 0; }
+    .slide.wide tr:has(td.stage) td { padding: 0; border: 0; width: auto; }
+    .slide.wide td.stage { grid-column: 1; grid-row: 1; font-size: 16px; }
+    .slide.wide td.time  { grid-column: 2; grid-row: 1; font-size: 14px; }
+    .slide.wide td.price { grid-column: 3; grid-row: 1; font-size: 14px; }
+    .slide.wide td.desc  { grid-column: 1 / -1; grid-row: 2; font-size: 13px; line-height: 1.45; color: var(--muted); }
+
+    /* Closing CTA: a little less air to keep it on one screen */
+    .close .cta-phone { padding: 16px 22px; font-size: 20px; }
+  }
+  .cta-phone:focus-visible { outline: 2px solid var(--soft); outline-offset: 4px; }
+  .close .mlc-mark { margin-top: clamp(40px, 6vw, 80px); }
+  @media (max-width: 1024px) and (min-width: 761px) {
+    ol.steps { grid-template-columns: repeat(3, 1fr); row-gap: clamp(20px, 2.4vw, 28px); }
+    ol.steps::before { display: none; }
+  }
+  @media (max-width: 720px) {
+    .platforms { gap: clamp(14px, 3vw, 22px) clamp(22px, 5vw, 36px); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .slide, .progress > i { transition: none; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ICON LIBRARY -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+  <defs>
+    <!-- MAYA — square head, screen face, pixel eyes (content creator) -->
+    <symbol id="face-maya" viewBox="0 0 120 140">
+      <g fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="60" y1="10" x2="60" y2="22"/>
+        <rect x="20" y="22" width="80" height="80" rx="12"/>
+        <rect x="32" y="40" width="56" height="36" rx="4"/>
+        <line x1="48" y1="90" x2="72" y2="90"/>
+        <line x1="20" y1="60" x2="13" y2="60"/>
+        <line x1="100" y1="60" x2="107" y2="60"/>
+        <line x1="48" y1="108" x2="48" y2="120"/>
+        <line x1="72" y1="108" x2="72" y2="120"/>
+        <path d="M 28 132 Q 60 120 92 132"/>
+      </g>
+      <g fill="currentColor">
+        <circle cx="60" cy="8" r="3.5"/>
+        <rect x="44" y="52" width="6" height="12" rx="1">
+          <animate attributeName="height" values="12;12;1;12;12" keyTimes="0;0.5;0.55;0.6;1" dur="2.7s" repeatCount="indefinite"/>
+          <animate attributeName="y"      values="52;52;57.5;52;52" keyTimes="0;0.5;0.55;0.6;1" dur="2.7s" repeatCount="indefinite"/>
+          <animate attributeName="x"      values="44;44;46;42;44" keyTimes="0;0.75;0.82;0.9;1" dur="2.7s" repeatCount="indefinite"/>
+        </rect>
+        <rect x="70" y="52" width="6" height="12" rx="1">
+          <animate attributeName="height" values="12;12;1;12;12" keyTimes="0;0.5;0.55;0.6;1" dur="2.7s" repeatCount="indefinite"/>
+          <animate attributeName="y"      values="52;52;57.5;52;52" keyTimes="0;0.5;0.55;0.6;1" dur="2.7s" repeatCount="indefinite"/>
+          <animate attributeName="x"      values="70;70;72;68;70" keyTimes="0;0.75;0.82;0.9;1" dur="2.7s" repeatCount="indefinite"/>
+        </rect>
+      </g>
+    </symbol>
+
+    <!-- TOM — pill head, round eyes, neutral mouth, message badge (sales follow-up) -->
+    <symbol id="face-tom" viewBox="0 0 120 140">
+      <g fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="60" y1="12" x2="60" y2="22"/>
+        <rect x="18" y="22" width="84" height="78" rx="39"/>
+        <line x1="48" y1="80" x2="72" y2="80"/>
+        <line x1="18" y1="60" x2="10" y2="60">
+          <animate attributeName="x2" values="10;10;6;10;10" keyTimes="0;0.3;0.5;0.7;1" dur="2.4s" repeatCount="indefinite"/>
+        </line>
+        <line x1="102" y1="60" x2="110" y2="60">
+          <animate attributeName="x2" values="110;110;114;110;110" keyTimes="0;0.3;0.5;0.7;1" dur="2.4s" repeatCount="indefinite"/>
+        </line>
+        <circle cx="98" cy="30" r="9">
+          <animate attributeName="r" values="9;9;11;9;9" keyTimes="0;0.45;0.55;0.7;1" dur="1.6s" repeatCount="indefinite"/>
+        </circle>
+        <line x1="93" y1="30" x2="103" y2="30"/>
+        <line x1="48" y1="104" x2="48" y2="118"/>
+        <line x1="72" y1="104" x2="72" y2="118"/>
+        <path d="M 28 132 Q 60 120 92 132"/>
+      </g>
+      <g fill="currentColor" stroke="none">
+        <polygon points="55,12 60,3 65,12"/>
+        <circle cx="46" cy="58" r="5"/>
+        <circle cx="74" cy="58" r="5"/>
+      </g>
+    </symbol>
+
+    <!-- RON — trapezoid head, sleepy arc eyes, small sun (wake-up) -->
+    <symbol id="face-ron" viewBox="0 0 120 140">
+      <g fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="60" y1="14" x2="60" y2="24"/>
+        <path d="M 54 14 A 6 6 0 0 1 66 14"/>
+        <path d="M 26 24 L 94 24 L 102 100 L 18 100 Z"/>
+        <path d="M 38 62 Q 46 56 54 62"/>
+        <path d="M 66 62 Q 74 56 82 62"/>
+        <circle cx="60" cy="82" r="4">
+          <animate attributeName="r" values="4;4;5.8;4;4" keyTimes="0;0.4;0.55;0.7;1" dur="3s" repeatCount="indefinite"/>
+        </circle>
+        <line x1="22" y1="60" x2="14" y2="60"/>
+        <line x1="98" y1="60" x2="106" y2="60"/>
+        <g>
+          <circle cx="100" cy="36" r="5"/>
+          <line x1="100" y1="25" x2="100" y2="28"/>
+          <line x1="100" y1="44" x2="100" y2="47"/>
+          <line x1="89" y1="36" x2="92" y2="36"/>
+          <line x1="108" y1="36" x2="111" y2="36"/>
+          <animateTransform attributeName="transform" type="rotate" from="0 100 36" to="360 100 36" dur="6s" repeatCount="indefinite"/>
+        </g>
+        <line x1="50" y1="104" x2="50" y2="118"/>
+        <line x1="72" y1="104" x2="72" y2="118"/>
+        <path d="M 28 132 Q 60 120 94 132"/>
+      </g>
+    </symbol>
+
+    <!-- DANA — softer rounded head, side hair sweeps, glasses, check antenna (feminine contract reviewer) -->
+    <symbol id="face-dana" viewBox="0 0 120 140">
+      <g fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="60" y1="14" x2="60" y2="22"/>
+        <path d="M 55 12 L 59 16 L 66 6"/>
+        <rect x="28" y="22" width="64" height="80" rx="22" ry="24"/>
+        <path d="M 30 56 Q 18 72 24 92">
+          <animate attributeName="d"
+            values="M 30 56 Q 18 72 24 92;M 30 56 Q 18 69 23 88;M 30 56 Q 18 75 25 95;M 30 56 Q 18 72 24 92"
+            keyTimes="0;0.3;0.65;1"
+            dur="4s" repeatCount="indefinite"/>
+        </path>
+        <path d="M 90 56 Q 102 72 96 92">
+          <animate attributeName="d"
+            values="M 90 56 Q 102 72 96 92;M 90 56 Q 102 69 97 88;M 90 56 Q 102 75 95 95;M 90 56 Q 102 72 96 92"
+            keyTimes="0;0.3;0.65;1"
+            dur="4s" repeatCount="indefinite"/>
+        </path>
+        <rect x="36" y="50" width="20" height="16" rx="4"/>
+        <rect x="64" y="50" width="20" height="16" rx="4"/>
+        <line x1="56" y1="58" x2="64" y2="58"/>
+        <path d="M 52 84 Q 60 90 68 84"/>
+        <line x1="28" y1="66" x2="22" y2="66"/>
+        <line x1="92" y1="66" x2="98" y2="66"/>
+        <line x1="48" y1="106" x2="48" y2="118"/>
+        <line x1="72" y1="106" x2="72" y2="118"/>
+        <path d="M 28 132 Q 60 120 92 132"/>
+      </g>
+      <g fill="currentColor" stroke="none">
+        <circle cx="46" cy="58" r="2.5">
+          <animate attributeName="cx" values="46;49;46;43;46" keyTimes="0;0.25;0.5;0.75;1" dur="3.3s" repeatCount="indefinite"/>
+        </circle>
+        <circle cx="74" cy="58" r="2.5">
+          <animate attributeName="cx" values="74;77;74;71;74" keyTimes="0;0.25;0.5;0.75;1" dur="3.3s" repeatCount="indefinite"/>
+        </circle>
+      </g>
+    </symbol>
+
+    <!-- GENERIC BOT — for "What an AI Employee is" -->
+    <symbol id="face-bot" viewBox="0 0 120 140">
+      <g fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="60" y1="10" x2="60" y2="22"/>
+        <circle cx="60" cy="60" r="38"/>
+        <line x1="22" y1="60" x2="14" y2="60"/>
+        <line x1="98" y1="60" x2="106" y2="60"/>
+        <line x1="50" y1="74" x2="70" y2="74"/>
+        <line x1="48" y1="100" x2="48" y2="116"/>
+        <line x1="72" y1="100" x2="72" y2="116"/>
+        <path d="M 28 130 Q 60 118 92 130"/>
+      </g>
+      <g fill="currentColor" stroke="none">
+        <circle cx="60" cy="8" r="3.5"/>
+        <circle cx="48" cy="56" r="4.5"/>
+        <circle cx="72" cy="56" r="4.5"/>
+      </g>
+    </symbol>
+
+    <!-- pattern-3: halftone dot field, gradient-masked fade from top to bottom -->
+    <symbol id="halftone-3" viewBox="0 0 120 30">
+      <defs>
+        <linearGradient id="ht3-grad" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="black"/>
+          <stop offset="30%" stop-color="black"/>
+          <stop offset="60%" stop-color="#333"/>
+          <stop offset="80%" stop-color="#888"/>
+          <stop offset="100%" stop-color="white"/>
+        </linearGradient>
+        <mask id="ht3-mask"><rect width="120" height="30" fill="url(#ht3-grad)"/></mask>
+        <pattern id="ht3-dots" width="0.9" height="0.9" patternUnits="userSpaceOnUse">
+          <circle cx="0.45" cy="0.45" r="0.18" fill="white"/>
+        </pattern>
+      </defs>
+      <rect width="120" height="30" fill="url(#ht3-dots)" mask="url(#ht3-mask)"/>
+    </symbol>
+
+    <!-- MLC MONOGRAM — MLDI -->
+    <symbol id="mlc-logo" viewBox="0 0 60 22">
+      <g fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M 4 19 L 4 3 L 11 13 L 18 3 L 18 19"/>
+        <path d="M 24 3 L 24 19 L 36 19"/>
+        <path d="M 56 6 A 8 8 0 1 0 56 16"/>
+      </g>
+    </symbol>
+
+    <!-- SMALL UTILITY ICONS -->
+    <symbol id="ic-pencil" viewBox="0 0 24 24">
+      <g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M 4 20 L 6 14 L 16 4 L 20 8 L 10 18 Z"/>
+        <line x1="14" y1="6" x2="18" y2="10"/>
+      </g>
+    </symbol>
+    <symbol id="ic-chat" viewBox="0 0 24 24">
+      <g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M 4 5 L 20 5 L 20 16 L 12 16 L 8 20 L 8 16 L 4 16 Z"/>
+      </g>
+    </symbol>
+    <symbol id="ic-doc" viewBox="0 0 24 24">
+      <g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M 6 3 L 15 3 L 19 7 L 19 21 L 6 21 Z"/>
+        <path d="M 15 3 L 15 7 L 19 7"/>
+        <line x1="9" y1="12" x2="16" y2="12"/>
+        <line x1="9" y1="16" x2="16" y2="16"/>
+      </g>
+    </symbol>
+    <symbol id="ic-whatsapp" viewBox="0 0 24 24">
+      <g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M 3 21 L 5 15 A 9 9 0 1 1 9 19 Z"/>
+      </g>
+    </symbol>
+    <symbol id="ic-email" viewBox="0 0 24 24">
+      <g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <rect x="3" y="5" width="18" height="14" rx="1"/>
+        <path d="M 3 7 L 12 13 L 21 7"/>
+      </g>
+    </symbol>
+    <symbol id="ic-crm" viewBox="0 0 24 24">
+      <g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <ellipse cx="12" cy="5" rx="7" ry="2.5"/>
+        <path d="M 5 5 V 12 C 5 13.5 8 14.5 12 14.5 C 16 14.5 19 13.5 19 12 V 5"/>
+        <path d="M 5 12 V 19 C 5 20.5 8 21.5 12 21.5 C 16 20.5 19 20.5 19 19 V 12"/>
+      </g>
+    </symbol>
+    <symbol id="ic-phone" viewBox="0 0 24 24">
+      <g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <rect x="7" y="3" width="10" height="18" rx="2"/>
+        <line x1="11" y1="18" x2="13" y2="18"/>
+      </g>
+    </symbol>
+    <symbol id="ic-drive" viewBox="0 0 24 24">
+      <g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M 9 3 L 15 3 L 21 14 L 15 14 Z"/>
+        <path d="M 9 3 L 3 14 L 6 19 L 12 8 Z"/>
+        <path d="M 12 8 L 18 19 L 6 19 Z"/>
+        <path d="M 18 19 L 21 14 L 15 14"/>
+      </g>
+    </symbol>
+    <symbol id="ic-slack" viewBox="0 0 24 24">
+      <g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="10" y1="3" x2="8" y2="21"/>
+        <line x1="16" y1="3" x2="14" y2="21"/>
+        <line x1="3" y1="9" x2="21" y2="9"/>
+        <line x1="3" y1="15" x2="21" y2="15"/>
+      </g>
+    </symbol>
+    <symbol id="ic-calendar" viewBox="0 0 24 24">
+      <g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <rect x="3" y="5" width="18" height="16" rx="1.5"/>
+        <line x1="3" y1="10" x2="21" y2="10"/>
+        <line x1="8" y1="3" x2="8" y2="7"/>
+        <line x1="16" y1="3" x2="16" y2="7"/>
+      </g>
+    </symbol>
+    <symbol id="ic-coins" viewBox="0 0 24 24">
+      <g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <ellipse cx="12" cy="7" rx="8" ry="3.5"/>
+        <path d="M 4 7 V 11 C 4 12.9 7.6 14.5 12 14.5 C 16.4 14.5 20 12.9 20 11 V 7"/>
+        <path d="M 4 11 V 15 C 4 16.9 7.6 18.5 12 18.5 C 16.4 18.5 20 16.9 20 15 V 11"/>
+      </g>
+    </symbol>
+    <symbol id="ic-dollar" viewBox="0 0 24 24">
+      <g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M 16 8 C 16 6 14 5 12 5 C 10 5 8 6 8 8 C 8 10 10 11 12 11 C 14 11 16 12 16 14 C 16 16 14 17 12 17 C 10 17 8 16 8 14"/>
+        <line x1="12" y1="3" x2="12" y2="19"/>
+      </g>
+    </symbol>
+    <symbol id="ic-cloud" viewBox="0 0 24 24">
+      <g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M 7 18 C 4 18 2 16 2 13.5 C 2 11.5 4 10 6 10 C 6 7 8.5 5 11.5 5 C 14 5 16 6.5 17 9 C 19.5 9 22 10.5 22 13.5 C 22 16 20 18 17.5 18 Z"/>
+      </g>
+    </symbol>
+    <symbol id="ic-cloud-lock" viewBox="0 0 24 24">
+      <g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M 7 14 C 4 14 2 12 2 9.5 C 2 7.5 4 6 6 6 C 6 3.5 8.5 2 11.5 2 C 14 2 16 3.5 17 5.5 C 19.5 5.5 22 7 22 10 C 22 12 20.5 13.5 18.5 14"/>
+        <rect x="9" y="14" width="8" height="7" rx="1"/>
+        <path d="M 11 14 V 12.5 C 11 11.4 11.9 10.5 13 10.5 C 14.1 10.5 15 11.4 15 12.5 V 14"/>
+      </g>
+    </symbol>
+    <symbol id="ic-server" viewBox="0 0 24 24">
+      <g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <rect x="4" y="3" width="16" height="7" rx="1"/>
+        <rect x="4" y="14" width="16" height="7" rx="1"/>
+        <line x1="8" y1="6.5" x2="14" y2="6.5"/>
+        <line x1="8" y1="17.5" x2="14" y2="17.5"/>
+      </g>
+      <circle cx="17" cy="6.5" r="0.8" fill="currentColor"/>
+      <circle cx="17" cy="17.5" r="0.8" fill="currentColor"/>
+    </symbol>
+    <symbol id="ic-pin" viewBox="0 0 24 24">
+      <g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M 12 21 C 7 15 5 12 5 9 A 7 7 0 0 1 19 9 C 19 12 17 15 12 21 Z"/>
+        <circle cx="12" cy="9" r="2.5"/>
+      </g>
+    </symbol>
+    <symbol id="ic-shield" viewBox="0 0 24 24">
+      <g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M 12 3 L 4 7 V 12 C 4 17 8 21 12 22 C 16 21 20 17 20 12 V 7 Z"/>
+        <path d="M 9 12 L 11 14 L 15 10"/>
+      </g>
+    </symbol>
+  </defs>
+</svg>
+
+<div class="progress" aria-hidden="true"><i></i></div>
+
+<main class="deck" id="deck">
+
+  <!-- 0 — Cover -->
+  <section class="slide cover" data-slide>
+    <div class="aurora-bottom" aria-hidden="true"></div>
+    <div class="slide-inner center stack">
+      <img class="mlc-mark" src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNzYwIiBoZWlnaHQ9IjMwMCIgdmlld0JveD0iMCAwIDc2MCAzMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxjaXJjbGUgY3g9IjEyNi41IiBjeT0iMTcyLjUiIHI9IjkiIGZpbGw9IndoaXRlIi8+CjxjaXJjbGUgY3g9IjEyNi41IiBjeT0iMTk1Ljc1IiByPSI5IiBmaWxsPSJ3aGl0ZSIvPgo8Y2lyY2xlIGN4PSIxMjYuNSIgY3k9IjIxOSIgcj0iOSIgZmlsbD0id2hpdGUiLz4KPGNpcmNsZSBjeD0iMTI2LjUiIGN5PSIyNDIuMjUiIHI9IjkiIGZpbGw9IndoaXRlIi8+CjxjaXJjbGUgY3g9IjEyNi41IiBjeT0iMjY1LjUiIHI9IjkiIGZpbGw9IndoaXRlIi8+CjxjaXJjbGUgY3g9IjkiIGN5PSI5IiByPSI5IiB0cmFuc2Zvcm09Im1hdHJpeCgtMSAwIDAgMSA4OS41IDE2My41KSIgZmlsbD0id2hpdGUiLz4KPGNpcmNsZSBjeD0iOCIgY3k9IjgiIHI9IjgiIHRyYW5zZm9ybT0ibWF0cml4KC0xIDAgMCAxIDg4LjUgMTg3Ljc1KSIgZmlsbD0id2hpdGUiLz4KPGNpcmNsZSBjeD0iNiIgY3k9IjYiIHI9IjYiIHRyYW5zZm9ybT0ibWF0cml4KC0xIDAgMCAxIDg2LjUgMjEzKSIgZmlsbD0id2hpdGUiLz4KPGNpcmNsZSBjeD0iNC41IiBjeT0iNC41IiByPSI0LjUiIHRyYW5zZm9ybT0ibWF0cml4KC0xIDAgMCAxIDg1IDIzNy43NSkiIGZpbGw9IndoaXRlIi8+CjxjaXJjbGUgY3g9IjIuNSIgY3k9IjIuNSIgcj0iMi41IiB0cmFuc2Zvcm09Im1hdHJpeCgtMSAwIDAgMSA4MyAyNjMpIiBmaWxsPSJ3aGl0ZSIvPgo8Y2lyY2xlIGN4PSIxNDkuNSIgY3k9IjE0OS41IiByPSI5IiBmaWxsPSJ3aGl0ZSIvPgo8Y2lyY2xlIGN4PSIxNDkuNSIgY3k9IjE3Mi43NSIgcj0iOSIgZmlsbD0id2hpdGUiLz4KPGNpcmNsZSBjeD0iMTQ5LjUiIGN5PSIxOTYiIHI9IjkiIGZpbGw9IndoaXRlIi8+CjxjaXJjbGUgY3g9IjE0OS41IiBjeT0iMjE5LjI1IiByPSI5IiBmaWxsPSJ3aGl0ZSIvPgo8Y2lyY2xlIGN4PSIxNDkuNSIgY3k9IjI0Mi41IiByPSI5IiBmaWxsPSJ3aGl0ZSIvPgo8Y2lyY2xlIGN4PSI5IiBjeT0iOSIgcj0iOSIgdHJhbnNmb3JtPSJtYXRyaXgoLTEgMCAwIDEgNjYuNSAxNDAuNSkiIGZpbGw9IndoaXRlIi8+CjxjaXJjbGUgY3g9IjgiIGN5PSI4IiByPSI4IiB0cmFuc2Zvcm09Im1hdHJpeCgtMSAwIDAgMSA2NS41IDE2NC43NSkiIGZpbGw9IndoaXRlIi8+CjxjaXJjbGUgY3g9IjYiIGN5PSI2IiByPSI2IiB0cmFuc2Zvcm09Im1hdHJpeCgtMSAwIDAgMSA2My41IDE5MCkiIGZpbGw9IndoaXRlIi8+CjxjaXJjbGUgY3g9IjQuNSIgY3k9IjQuNSIgcj0iNC41IiB0cmFuc2Zvcm09Im1hdHJpeCgtMSAwIDAgMSA2MiAyMTQuNzUpIiBmaWxsPSJ3aGl0ZSIvPgo8Y2lyY2xlIGN4PSIyLjUiIGN5PSIyLjUiIHI9IjIuNSIgdHJhbnNmb3JtPSJtYXRyaXgoLTEgMCAwIDEgNjAgMjQwKSIgZmlsbD0id2hpdGUiLz4KPGNpcmNsZSBjeD0iMTcyLjUiIGN5PSIxMjYuNSIgcj0iOSIgZmlsbD0id2hpdGUiLz4KPGNpcmNsZSBjeD0iMTcyLjUiIGN5PSIxNDkuNzUiIHI9IjkiIGZpbGw9IndoaXRlIi8+CjxjaXJjbGUgY3g9IjE3Mi41IiBjeT0iMTczIiByPSI5IiBmaWxsPSJ3aGl0ZSIvPgo8Y2lyY2xlIGN4PSIxNzIuNSIgY3k9IjE5Ni4yNSIgcj0iOSIgZmlsbD0id2hpdGUiLz4KPGNpcmNsZSBjeD0iMTcyLjUiIGN5PSIyMTkuNSIgcj0iOSIgZmlsbD0id2hpdGUiLz4KPGNpcmNsZSBjeD0iOSIgY3k9IjkiIHI9IjkiIHRyYW5zZm9ybT0ibWF0cml4KC0xIDAgMCAxIDQzLjUgMTE3LjUpIiBmaWxsPSJ3aGl0ZSIvPgo8Y2lyY2xlIGN4PSI4IiBjeT0iOCIgcj0iOCIgdHJhbnNmb3JtPSJtYXRyaXgoLTEgMCAwIDEgNDIuNSAxNDEuNzUpIiBmaWxsPSJ3aGl0ZSIvPgo8Y2lyY2xlIGN4PSI2IiBjeT0iNiIgcj0iNiIgdHJhbnNmb3JtPSJtYXRyaXgoLTEgMCAwIDEgNDAuNSAxNjcpIiBmaWxsPSJ3aGl0ZSIvPgo8Y2lyY2xlIGN4PSI0LjUiIGN5PSI0LjUiIHI9IjQuNSIgdHJhbnNmb3JtPSJtYXRyaXgoLTEgMCAwIDEgMzkgMTkxLjc1KSIgZmlsbD0id2hpdGUiLz4KPGNpcmNsZSBjeD0iMi41IiBjeT0iMi41IiByPSIyLjUiIHRyYW5zZm9ybT0ibWF0cml4KC0xIDAgMCAxIDM3IDIxNykiIGZpbGw9IndoaXRlIi8+CjxjaXJjbGUgY3g9IjE5NS41IiBjeT0iMTAyLjUiIHI9IjkiIGZpbGw9IndoaXRlIi8+CjxjaXJjbGUgY3g9IjE5NS41IiBjeT0iMTI1Ljc1IiByPSI5IiBmaWxsPSJ3aGl0ZSIvPgo8Y2lyY2xlIGN4PSIxOTUuNSIgY3k9IjE0OSIgcj0iOSIgZmlsbD0id2hpdGUiLz4KPGNpcmNsZSBjeD0iMTk1LjUiIGN5PSIxNzIuMjUiIHI9IjkiIGZpbGw9IndoaXRlIi8+CjxjaXJjbGUgY3g9IjE5NS41IiBjeT0iMTk1LjUiIHI9IjkiIGZpbGw9IndoaXRlIi8+CjxjaXJjbGUgY3g9IjkiIGN5PSI5IiByPSI5IiB0cmFuc2Zvcm09Im1hdHJpeCgtMSAwIDAgMSAyMC41IDkzLjUpIiBmaWxsPSJ3aGl0ZSIvPgo8Y2lyY2xlIGN4PSI4IiBjeT0iOCIgcj0iOCIgdHJhbnNmb3JtPSJtYXRyaXgoLTEgMCAwIDEgMTkuNSAxMTcuNzUpIiBmaWxsPSJ3aGl0ZSIvPgo8Y2lyY2xlIGN4PSI2IiBjeT0iNiIgcj0iNiIgdHJhbnNmb3JtPSJtYXRyaXgoLTEgMCAwIDEgMTcuNSAxNDMpIiBmaWxsPSJ3aGl0ZSIvPgo8Y2lyY2xlIGN4PSI0LjUiIGN5PSI0LjUiIHI9IjQuNSIgdHJhbnNmb3JtPSJtYXRyaXgoLTEgMCAwIDEgMTYgMTY3Ljc1KSIgZmlsbD0id2hpdGUiLz4KPGNpcmNsZSBjeD0iMi41IiBjeT0iMi41IiByPSIyLjUiIHRyYW5zZm9ybT0ibWF0cml4KC0xIDAgMCAxIDE0IDE5MykiIGZpbGw9IndoaXRlIi8+CjxjaXJjbGUgY3g9IjEwMy41IiBjeT0iMTk1LjUiIHI9IjkiIGZpbGw9IndoaXRlIi8+CjxjaXJjbGUgY3g9IjEwMy41IiBjeT0iMjE4Ljc1IiByPSI5IiBmaWxsPSJ3aGl0ZSIvPgo8Y2lyY2xlIGN4PSIxMDMuNSIgY3k9IjI0MiIgcj0iOSIgZmlsbD0id2hpdGUiLz4KPGNpcmNsZSBjeD0iMTAzLjUiIGN5PSIyNjUuMjUiIHI9IjkiIGZpbGw9IndoaXRlIi8+CjxjaXJjbGUgY3g9IjEwMy41IiBjeT0iMjg4LjUiIHI9IjkiIGZpbGw9IndoaXRlIi8+CjxjaXJjbGUgY3g9IjEwMy41IiBjeT0iMTEuNSIgcj0iMi41IiBmaWxsPSJ3aGl0ZSIvPgo8Y2lyY2xlIGN4PSIxMDMuNSIgY3k9IjM0LjUiIHI9IjIuNSIgZmlsbD0id2hpdGUiLz4KPGNpcmNsZSBjeD0iMTAzLjUiIGN5PSI1Ny41IiByPSIyLjUiIGZpbGw9IndoaXRlIi8+CjxjaXJjbGUgY3g9IjEwMy41IiBjeT0iODAuNSIgcj0iMi41IiBmaWxsPSJ3aGl0ZSIvPgo8Y2lyY2xlIGN4PSIxMDMuNSIgY3k9IjEwMy41IiByPSIyLjUiIGZpbGw9IndoaXRlIi8+CjxjaXJjbGUgY3g9IjEwMy41IiBjeT0iMTI2LjUiIHI9IjIuNSIgZmlsbD0id2hpdGUiLz4KPGNpcmNsZSBjeD0iMTAzLjUiIGN5PSIxNDkuNSIgcj0iMi41IiBmaWxsPSJ3aGl0ZSIvPgo8Y2lyY2xlIGN4PSIxMDMuNSIgY3k9IjE3Mi41IiByPSIyLjUiIGZpbGw9IndoaXRlIi8+CjxjaXJjbGUgY3g9IjEyNi41IiBjeT0iMzQuNSIgcj0iMi41IiBmaWxsPSJ3aGl0ZSIvPgo8Y2lyY2xlIGN4PSIxMjYuNSIgY3k9IjU3LjUiIHI9IjIuNSIgZmlsbD0id2hpdGUiLz4KPGNpcmNsZSBjeD0iMTI2LjUiIGN5PSI4MC41IiByPSIyLjUiIGZpbGw9IndoaXRlIi8+CjxjaXJjbGUgY3g9IjEyNi41IiBjeT0iMTAzLjUiIHI9IjIuNSIgZmlsbD0id2hpdGUiLz4KPGNpcmNsZSBjeD0iMTI2LjUiIGN5PSIxMjYuNSIgcj0iMi41IiBmaWxsPSJ3aGl0ZSIvPgo8Y2lyY2xlIGN4PSIxMjYuNSIgY3k9IjE0OS41IiByPSIyLjUiIGZpbGw9IndoaXRlIi8+CjxjaXJjbGUgY3g9IjIuNSIgY3k9IjIuNSIgcj0iMi41IiB0cmFuc2Zvcm09Im1hdHJpeCgtMSAwIDAgMSA4MyAzMikiIGZpbGw9IndoaXRlIi8+CjxjaXJjbGUgY3g9IjIuNSIgY3k9IjIuNSIgcj0iMi41IiB0cmFuc2Zvcm09Im1hdHJpeCgtMSAwIDAgMSA4MyA1NSkiIGZpbGw9IndoaXRlIi8+CjxjaXJjbGUgY3g9IjIuNSIgY3k9IjIuNSIgcj0iMi41IiB0cmFuc2Zvcm09Im1hdHJpeCgtMSAwIDAgMSA4MyA3OCkiIGZpbGw9IndoaXRlIi8+CjxjaXJjbGUgY3g9IjIuNSIgY3k9IjIuNSIgcj0iMi41IiB0cmFuc2Zvcm09Im1hdHJpeCgtMSAwIDAgMSA4MyAxMDEpIiBmaWxsPSJ3aGl0ZSIvPgo8Y2lyY2xlIGN4PSIyLjUiIGN5PSIyLjUiIHI9IjIuNSIgdHJhbnNmb3JtPSJtYXRyaXgoLTEgMCAwIDEgODMgMTI0KSIgZmlsbD0id2hpdGUiLz4KPGNpcmNsZSBjeD0iMi41IiBjeT0iMi41IiByPSIyLjUiIHRyYW5zZm9ybT0ibWF0cml4KC0xIDAgMCAxIDgzIDE0NykiIGZpbGw9IndoaXRlIi8+CjxjaXJjbGUgY3g9IjE0OS41IiBjeT0iNTguNSIgcj0iMi41IiBmaWxsPSJ3aGl0ZSIvPgo8Y2lyY2xlIGN4PSIxNDkuNSIgY3k9IjgxLjUiIHI9IjIuNSIgZmlsbD0id2hpdGUiLz4KPGNpcmNsZSBjeD0iMTQ5LjUiIGN5PSIxMDQuNSIgcj0iMi41IiBmaWxsPSJ3aGl0ZSIvPgo8Y2lyY2xlIGN4PSIxNDkuNSIgY3k9IjEyNy41IiByPSIyLjUiIGZpbGw9IndoaXRlIi8+CjxjaXJjbGUgY3g9IjE0OS41IiBjeT0iMTUwLjUiIHI9IjIuNSIgZmlsbD0id2hpdGUiLz4KPGNpcmNsZSBjeD0iMTQ5LjUiIGN5PSIxNzMuNSIgcj0iMi41IiBmaWxsPSJ3aGl0ZSIvPgo8Y2lyY2xlIGN4PSIyLjUiIGN5PSIyLjUiIHI9IjIuNSIgdHJhbnNmb3JtPSJtYXRyaXgoLTEgMCAwIDEgNjAgNTYpIiBmaWxsPSJ3aGl0ZSIvPgo8Y2lyY2xlIGN4PSIyLjUiIGN5PSIyLjUiIHI9IjIuNSIgdHJhbnNmb3JtPSJtYXRyaXgoLTEgMCAwIDEgNjAgNzkpIiBmaWxsPSJ3aGl0ZSIvPgo8Y2lyY2xlIGN4PSIyLjUiIGN5PSIyLjUiIHI9IjIuNSIgdHJhbnNmb3JtPSJtYXRyaXgoLTEgMCAwIDEgNjAgMTAyKSIgZmlsbD0id2hpdGUiLz4KPGNpcmNsZSBjeD0iMi41IiBjeT0iMi41IiByPSIyLjUiIHRyYW5zZm9ybT0ibWF0cml4KC0xIDAgMCAxIDYwIDEyNSkiIGZpbGw9IndoaXRlIi8+CjxjaXJjbGUgY3g9IjE3Mi41IiBjeT0iODEuNSIgcj0iMi41IiBmaWxsPSJ3aGl0ZSIvPgo8Y2lyY2xlIGN4PSIxNzIuNSIgY3k9IjEwNC41IiByPSIyLjUiIGZpbGw9IndoaXRlIi8+CjxjaXJjbGUgY3g9IjIuNSIgY3k9IjIuNSIgcj0iMi41IiB0cmFuc2Zvcm09Im1hdHJpeCgtMSAwIDAgMSAzNyA3OSkiIGZpbGw9IndoaXRlIi8+CjxjaXJjbGUgY3g9IjIuNSIgY3k9IjIuNSIgcj0iMi41IiB0cmFuc2Zvcm09Im1hdHJpeCgtMSAwIDAgMSAzNyAxMDIpIiBmaWxsPSJ3aGl0ZSIvPgo8cGF0aCBkPSJNNzI0LjI1NiA5Mi4zMTY3SDc0Ny44ODFWMjE0LjgxN0g3MjQuMjU2VjkyLjMxNjdaIiBmaWxsPSJ3aGl0ZSIvPgo8cGF0aCBkPSJNNjE3LjI1OCA5Mi4zMTY3QzYzMC4zMjQgOTIuMzE2NyA2NDEuNjQxIDk0Ljg4MzMgNjUxLjIwOCAxMDAuMDE3QzY2MC44OTEgMTA1LjAzMyA2NjguNDE2IDExMi4xNSA2NzMuNzgzIDEyMS4zNjdDNjc5LjE0OSAxMzAuNTgzIDY4MS44MzMgMTQxLjQzMyA2ODEuODMzIDE1My45MTdDNjgxLjgzMyAxNjYuMjgzIDY3OS4xNDkgMTc3LjAxNyA2NzMuNzgzIDE4Ni4xMTdDNjY4LjQxNiAxOTUuMjE3IDY2MC44OTEgMjAyLjI3NSA2NTEuMjA4IDIwNy4yOTJDNjQxLjY0MSAyMTIuMzA4IDYzMC4zMjQgMjE0LjgxNyA2MTcuMjU4IDIxNC44MTdINTcxLjU4M1Y5Mi4zMTY3SDYxNy4yNThaTTYxNi41NTggMTk1LjA0MkM2MjkuNzQxIDE5NS4wNDIgNjM5Ljg5MSAxOTEuNDI1IDY0Ny4wMDggMTg0LjE5MkM2NTQuMTI0IDE3Ni44NDIgNjU3LjY4MyAxNjYuNzUgNjU3LjY4MyAxNTMuOTE3QzY1Ny42ODMgMTQwLjk2NyA2NTQuMTI0IDEzMC43NTggNjQ3LjAwOCAxMjMuMjkyQzYzOS44OTEgMTE1LjgyNSA2MjkuNzQxIDExMi4wOTIgNjE2LjU1OCAxMTIuMDkySDU5NS4yMDhWMTk1LjA0Mkg2MTYuNTU4WiIgZmlsbD0id2hpdGUiLz4KPHBhdGggZD0iTTQ3Ni43MTMgOTIuMzE2N1YxOTUuMDQySDUzMS4zMTNWMjE0LjgxN0g0NTMuMDg4VjkyLjMxNjdINDc2LjcxM1oiIGZpbGw9IndoaXRlIi8+CjxwYXRoIGQ9Ik0yOTYuNTI1IDIxNC44MTdIMjcyLjlWOTIuMzE2N0gyOTkuODVMMzM4Ljg3NSAxODQuMDE3TDM3Ny45IDkyLjMxNjdINDA0Ljg1VjIxNC44MTdIMzgxLjIyNVYxMzUuNzE3TDM0OC4xNSAyMTQuODE3SDMyOS42TDI5Ni41MjUgMTM1LjcxN1YyMTQuODE3WiIgZmlsbD0id2hpdGUiLz4KPC9zdmc+" alt="MLDI">
+      <h1>Free your team from the repetitive work they&rsquo;re stuck on.</h1>
+      <div class="tag">Internal master deck &middot; v122</div>
+    </div>
+  </section>
+
+  <!-- 1 — Your team burns hours on it -->
+  <section class="slide" data-slide>
+    <div class="slide-inner center stack">
+      <svg class="clock-anim" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-linecap="round" aria-hidden="true">
+        <circle cx="50" cy="50" r="42" stroke-width="5"/>
+        <circle cx="50" cy="50" r="3" fill="currentColor" stroke="none"/>
+        <line x1="50" y1="50" x2="50" y2="22" stroke-width="4">
+          <animateTransform attributeName="transform" type="rotate" from="0 50 50" to="360 50 50" dur="1.2s" repeatCount="indefinite"/>
+        </line>
+        <line x1="50" y1="50" x2="50" y2="32" stroke-width="6">
+          <animateTransform attributeName="transform" type="rotate" from="0 50 50" to="360 50 50" dur="14.4s" repeatCount="indefinite"/>
+        </line>
+      </svg>
+      <p class="hook">Your team burns hours on it. You burn money on it.</p>
+      <p>Writing content. Chasing leads. Checking contracts. The same repetitive work, every week, costing you both ways.</p>
+    </div>
+  </section>
+
+  <!-- 2 — What if it just got handled? -->
+  <section class="slide" data-slide>
+    <div class="slide-inner stack">
+      <h2>What if it just got handled?</h2>
+      <p>Quietly, in the background, without you chasing anyone. The work gets done, the cost drops, and you finally get to spend your attention where it actually pays off.</p>
+      <p>That&rsquo;s a Digital Employee.</p>
+    </div>
+  </section>
+
+  <!-- 4 — What a Digital Employee is -->
+  <section class="slide" data-slide>
+    <div class="slide-inner center stack">
+      <div class="face-avatar"><svg aria-hidden="true"><use href="#face-bot"/></svg></div>
+      <div class="eyebrow">What a Digital Employee is</div>
+      <h2>A digital worker that takes one job and does it from start to finish, on its own.</h2>
+      <p class="lead">You don&rsquo;t manage it. You talk to it, the way you&rsquo;d brief someone new.</p>
+    </div>
+  </section>
+
+  <!-- 4 — Works with your tools -->
+  <section class="slide" data-slide>
+    <div class="slide-inner center stack">
+      <div class="face-avatar"><svg aria-hidden="true"><use href="#face-bot"/></svg></div>
+      <div class="eyebrow">What a Digital Employee is</div>
+      <h2>It works with the tools you already use.</h2>
+      <div class="platforms">
+        <div class="platform"><svg class="ic-md"><use href="#ic-whatsapp"/></svg><span>WhatsApp</span></div>
+        <div class="platform"><svg class="ic-md"><use href="#ic-email"/></svg><span>Email</span></div>
+        <div class="platform"><svg class="ic-md"><use href="#ic-crm"/></svg><span>CRM</span></div>
+        <div class="platform"><svg class="ic-md"><use href="#ic-drive"/></svg><span>Google Drive</span></div>
+        <div class="platform"><svg class="ic-md"><use href="#ic-slack"/></svg><span>Slack</span></div>
+        <div class="platform"><svg class="ic-md"><use href="#ic-calendar"/></svg><span>Calendar</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 5 — So what does one look like? -->
+  <section class="slide meet" data-slide>
+    <div class="aurora-bottom aurora-soft" aria-hidden="true"></div>
+    <div class="slide-inner center stack">
+      <h2>So what does one actually look like?</h2>
+      <p>Three of them are already working in real businesses. Here they are.</p>
+    </div>
+  </section>
+
+  <!-- 6 — Meet Maya -->
+  <section class="slide meet" data-slide>
+    <div class="slide-inner center stack">
+      <svg class="face-lg"><use href="#face-maya"/></svg>
+      <div class="eyebrow">Digital Employee</div>
+      <h1>Maya</h1>
+      <div class="role">Content Writer.</div>
+    </div>
+  </section>
+
+  <!-- 7 — Maya story -->
+  <section class="slide" data-slide>
+    <div class="slide-inner stack">
+      <div class="eyebrow-row">
+        <svg class="face-mini"><use href="#face-maya"/></svg>
+        <span class="eyebrow">Maya &middot; a little story</span>
+      </div>
+      <p class="lead">Imagine someone on your team who scans 50 sources overnight and has fresh articles waiting with your morning coffee.</p>
+      <p>That&rsquo;s about 20 a day, and she never takes a day off.</p>
+    </div>
+  </section>
+
+  <!-- 8 — Maya proof -->
+  <section class="slide" data-slide>
+    <div class="slide-inner stack" style="max-width:860px">
+      <div class="eyebrow-row">
+        <svg class="face-mini"><use href="#face-maya"/></svg>
+        <span class="eyebrow">Maya &middot; already running</span>
+      </div>
+      <h2>Maya is already running at a medical news outlet.</h2>
+      <p class="lead">She produces their content for a small fraction of what it used to cost.</p>
+    </div>
+  </section>
+
+  <!-- 9 — Maya numbers -->
+  <section class="slide wide" data-slide>
+    <div class="slide-inner stack">
+      <div class="eyebrow-row">
+        <svg class="face-mini"><use href="#face-maya"/></svg>
+        <span class="eyebrow">Maya &middot; the numbers</span>
+      </div>
+      <table>
+        <tbody>
+          <tr><td class="k">Output</td><td class="v">20 pieces of content per day</td></tr>
+          <tr><td class="k">Sources monitored</td><td class="v">50: news outlets, competitor sites, medical news</td></tr>
+          <tr><td class="k">Approval</td><td class="v">Never posts alone. Every piece reviewed by a human via email or chat</td></tr>
+          <tr><td class="k">Cost</td><td class="v">Content production budget was &#8362;9,000/month. Now &#8362;1,800/month. You keep &#8362;7,200/month.</td></tr>
+          <tr><td class="k">Schedule</td><td class="v">24/7, no days off</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- 10 — Meet Tom -->
+  <section class="slide meet" data-slide>
+    <div class="slide-inner center stack">
+      <svg class="face-lg"><use href="#face-tom"/></svg>
+      <div class="eyebrow">Digital Employee</div>
+      <h1>Tom</h1>
+      <div class="role">Sales Representative.</div>
+    </div>
+  </section>
+
+  <!-- 11 — Tom story -->
+  <section class="slide" data-slide>
+    <div class="slide-inner stack">
+      <div class="eyebrow-row">
+        <svg class="face-mini"><use href="#face-tom"/></svg>
+        <span class="eyebrow">Tom &middot; a little story</span>
+      </div>
+      <p class="lead">A lead fills your form. 30 seconds later they get a personal WhatsApp.</p>
+      <p>If they don&rsquo;t answer, Tom keeps following up (WhatsApp, email, on a steady cadence) for about two weeks until they reply.</p>
+      <p>The moment they reply on any channel, Tom hands the lead to your sales team. Tom doesn&rsquo;t close deals. He keeps the follow-up consistent so your people walk into warm conversations.</p>
+    </div>
+  </section>
+
+  <!-- 12 — Tom proof -->
+  <section class="slide" data-slide>
+    <div class="slide-inner stack">
+      <div class="eyebrow-row">
+        <svg class="face-mini"><use href="#face-tom"/></svg>
+        <span class="eyebrow">Tom &middot; already running</span>
+      </div>
+      <h2>Tom is already running at a 13-agent premium real estate brokerage in Miami.</h2>
+      <p>Tom helps streamline high-end real estate sales, handling follow-up on properties from $5M and above.</p>
+      <div class="platforms">
+        <div class="platform"><svg class="ic-md"><use href="#ic-pin"/></svg><span>Miami, FL</span></div>
+        <div class="platform"><svg class="ic-md"><use href="#ic-coins"/></svg><span>$5M+ properties</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 13 — Tom numbers -->
+  <section class="slide wide" data-slide>
+    <div class="slide-inner stack">
+      <div class="eyebrow-row">
+        <svg class="face-mini"><use href="#face-tom"/></svg>
+        <span class="eyebrow">Tom &middot; the numbers</span>
+      </div>
+      <table>
+        <tbody>
+          <tr><td class="k">First response</td><td class="v">Under 30 seconds, day or night</td></tr>
+          <tr><td class="k">Follow-ups per lead</td><td class="v">Up to 7</td></tr>
+          <tr><td class="k">Channels covered</td><td class="v">2: WhatsApp + email</td></tr>
+          <tr><td class="k">Window</td><td class="v">Two weeks of consistent outreach, then he stands down</td></tr>
+          <tr><td class="k">Handoff</td><td class="v">Warm lead, name known, ready for your sales team</td></tr>
+          <tr><td class="k">Schedule</td><td class="v">24/7. No leads lost at 2am</td></tr>
+          <tr><td class="k">Recovered revenue</td><td class="v">Leads lost to slow response convert at near zero. Tom recovers them and hands them off warm. On a typical 13-agent brokerage, that is dozens of additional qualified conversations per month, directly feeding the sales team&rsquo;s pipeline.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- 14 — Meet Dana -->
+  <section class="slide meet" data-slide>
+    <div class="slide-inner center stack">
+      <svg class="face-lg"><use href="#face-dana"/></svg>
+      <div class="eyebrow">Digital Employee</div>
+      <h1>Dana</h1>
+      <div class="role">Contract Renewal Specialist.</div>
+    </div>
+  </section>
+
+  <!-- 15 — Dana story -->
+  <section class="slide" data-slide>
+    <div class="slide-inner stack">
+      <div class="eyebrow-row">
+        <svg class="face-mini"><use href="#face-dana"/></svg>
+        <span class="eyebrow">Dana &middot; a little story</span>
+      </div>
+      <p class="lead">In commercial real estate, you sit on hundreds of contracts: leases, vendors, service agreements. It&rsquo;s nearly impossible to track them all by hand. One slips past its renewal date and quietly costs you real money.</p>
+      <p>Dana watches every one and warns you 60 days out, before the trap closes.</p>
+    </div>
+  </section>
+
+  <!-- 16 — Dana depth -->
+  <section class="slide vcenter" data-slide>
+    <div class="slide-inner stack" style="max-width:860px">
+      <div class="eyebrow-row">
+        <svg class="face-mini"><use href="#face-dana"/></svg>
+        <span class="eyebrow">Dana &middot; how she works</span>
+      </div>
+      <h2>Dana knows each contract&rsquo;s terms, its renewal date, and the auto-renewal clauses hiding inside.</h2>
+      <p class="lead">She pings the right person with everything they need to act.</p>
+    </div>
+  </section>
+
+  <!-- 17 — Dana numbers -->
+  <section class="slide wide" data-slide>
+    <div class="slide-inner stack">
+      <div class="eyebrow-row">
+        <svg class="face-mini"><use href="#face-dana"/></svg>
+        <span class="eyebrow">Dana &middot; the numbers</span>
+      </div>
+      <table>
+        <tbody>
+          <tr><td class="k">Contracts watched</td><td class="v">Hundreds, continuously</td></tr>
+          <tr><td class="k">Lead time</td><td class="v">60 days before each renewal date</td></tr>
+          <tr><td class="k">Alerts</td><td class="v">Pings the right person on WhatsApp or email with full context</td></tr>
+          <tr><td class="k">Savings</td><td class="v">One missed auto-renewal on a single vendor or lease contract can cost &#8362;20,000 silently. Dana catches it 60 days before it happens, every time.</td></tr>
+          <tr><td class="k">Schedule</td><td class="v">24/7. Never sleeps on a deadline</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- 18 — Every Digital Employee runs the same way -->
+  <section class="slide wide" data-slide>
+    <div class="aurora-top aurora-soft aurora-dim" aria-hidden="true"></div>
+    <div class="aurora-bottom aurora-soft aurora-dim" aria-hidden="true"></div>
+    <div class="slide-inner center stack">
+      <h2>Every Digital Employee runs the same way.</h2>
+      <div class="family">
+        <div class="family-item"><svg class="face-sm"><use href="#face-maya"/></svg><div class="name">Maya</div></div>
+        <div class="family-item"><svg class="face-sm"><use href="#face-tom"/></svg><div class="name">Tom</div></div>
+        <div class="family-item"><svg class="face-sm"><use href="#face-dana"/></svg><div class="name">Dana</div></div>
+      </div>
+      <p>Each one works inside the tools you already have, on your terms, on your timeline.</p>
+      <p>You set it up once, you teach it your way of doing things, and from then on it just does the work.</p>
+    </div>
+  </section>
+
+  <!-- 19 — How we build it -->
+  <section class="slide wide" data-slide>
+    <div class="slide-inner stack">
+      <div class="eyebrow">How we build it</div>
+      <ol class="steps">
+        <li><div class="num">1</div><div class="name">Discovery &amp; quote</div><div class="desc">Deep workflow audit, then a fixed build quote.</div></li>
+        <li><div class="num">2</div><div class="name">Build</div><div class="desc">We build, connect, train it on your data.</div></li>
+        <li><div class="num">3</div><div class="name">Stabilize</div><div class="desc">Goes live. We stay close 30 days, fix against real use.</div></li>
+        <li><div class="num">4</div><div class="name">Run</div><div class="desc">You use it day to day. We step back.</div></li>
+        <li><div class="num">5</div><div class="name">Maintain</div><div class="desc">We keep it running, or teach your team to.</div></li>
+      </ol>
+    </div>
+  </section>
+
+  <!-- 20 — Compliance & Deployment -->
+  <section class="slide wide" data-slide>
+    <div class="slide-inner stack">
+      <div class="eyebrow">Compliance &amp; Deployment</div>
+      <h2>Built to your safety standards.<br>Deployed your way.</h2>
+      <div class="section-label">Compliance</div>
+      <div class="badges">
+        <div class="badge">SOC&nbsp;2 Type&nbsp;II</div>
+        <div class="badge">GDPR</div>
+        <div class="badge">ISO/IEC&nbsp;42001</div>
+        <div class="badge">NIST&nbsp;AI&nbsp;RMF</div>
+        <div class="badge">EU&nbsp;AI&nbsp;Act</div>
+        <div class="badge">ISO/IEC&nbsp;27001</div>
+        <div class="badge">HIPAA</div>
+        <div class="badge">PCI&#8209;DSS</div>
+      </div>
+      <div class="section-label">Deployment</div>
+      <div class="deploy">
+        <div class="deploy-item">
+          <svg class="ic-deploy" aria-hidden="true"><use href="#ic-cloud"/></svg>
+          <div class="deploy-label">Public Cloud</div>
+        </div>
+        <div class="deploy-item">
+          <svg class="ic-deploy" aria-hidden="true"><use href="#ic-cloud-lock"/></svg>
+          <div class="deploy-label">Private Cloud</div>
+        </div>
+        <div class="deploy-item">
+          <svg class="ic-deploy" aria-hidden="true"><use href="#ic-server"/></svg>
+          <div class="deploy-label">On-Premises</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 21 — Investment & timeline -->
+  <section class="slide wide" data-slide>
+    <div class="slide-inner stack">
+      <div class="eyebrow">Investment &amp; timeline</div>
+      <table>
+        <tbody>
+          <tr><td class="stage">Discovery + Build</td><td class="desc">We map your workflow, then design, build, connect, and train your Digital Employee. One-time.<br><small class="dim">Most builds land between &#8362;20,000 and &#8362;60,000 depending on integrations and complexity.</small></td><td class="price">From &#8362;20,000</td></tr>
+          <tr><td class="stage">Run / support</td><td class="desc">We keep it tuned and adapt it as your business evolves.<br><small class="dim">Depending on build complexity, support costs can vary between &#8362;2,000 and &#8362;4,000 per month.</small></td><td class="price">From &#8362;2,000/mo</td></tr>
+          <tr><td class="stage">Run / subscriptions</td><td class="desc">Platform, WhatsApp, email, infrastructure. Fixed every month.</td><td class="price">From &#8362;75/mo</td></tr>
+          <tr><td class="stage">Run / AI usage</td><td class="desc">What the AI uses as it works. You use more, you pay more.</td><td class="price">From &#8362;60/mo</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- 22 — Why now (animated hourglass) -->
+  <section class="slide" data-slide>
+    <div class="slide-inner stack">
+      <div class="eyebrow">Why now</div>
+      <svg class="hg-anim" viewBox="0 0 32 48" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <defs>
+          <clipPath id="hg-top-clip"><polygon points="7,4 25,4 16.5,23.5 15.5,23.5"/></clipPath>
+          <clipPath id="hg-bot-clip"><polygon points="7,44 25,44 16.5,24.5 15.5,24.5"/></clipPath>
+        </defs>
+        <g>
+          <line x1="6" y1="4" x2="26" y2="4"/>
+          <line x1="6" y1="44" x2="26" y2="44"/>
+          <path d="M 7 4 L 25 4 L 16 23.8 L 7 4 Z"/>
+          <path d="M 7 44 L 25 44 L 16 24.2 L 7 44 Z"/>
+          <rect x="7" y="4" width="18" height="20" fill="currentColor" stroke="none" clip-path="url(#hg-top-clip)">
+            <animate attributeName="y" values="4;22;22;4;4" keyTimes="0;0.45;0.55;0.95;1" dur="5s" repeatCount="indefinite"/>
+          </rect>
+          <rect x="7" y="44" width="18" height="0" fill="currentColor" stroke="none" clip-path="url(#hg-bot-clip)">
+            <animate attributeName="y" values="44;25;25;44;44" keyTimes="0;0.45;0.55;0.95;1" dur="5s" repeatCount="indefinite"/>
+            <animate attributeName="height" values="0;19;19;0;0" keyTimes="0;0.45;0.55;0.95;1" dur="5s" repeatCount="indefinite"/>
+          </rect>
+          <line x1="16" y1="23.5" x2="16" y2="25" stroke-width="0.8">
+            <animate attributeName="opacity" values="1;1;0;0;1" keyTimes="0;0.44;0.5;0.95;1" dur="5s" repeatCount="indefinite"/>
+          </line>
+          <animateTransform attributeName="transform" type="rotate"
+            dur="5s" repeatCount="indefinite"
+            calcMode="spline"
+            keySplines="0 0 0 0; 0.65 0 0.35 1; 0 0 0 0; 0.65 0 0.35 1"
+            keyTimes="0; 0.45; 0.55; 0.95; 1"
+            values="0 16 24; 0 16 24; 180 16 24; 180 16 24; 360 16 24"/>
+        </g>
+      </svg>
+      <h2>Your competitors are already doing this.</h2>
+      <p>Right now, businesses your size are putting Digital Employees to work. Every month you wait, they pull a little further ahead. The time to start is now.</p>
+    </div>
+  </section>
+
+  <!-- 23 — Close -->
+  <section class="slide close" data-slide>
+    <div class="aurora-bottom" aria-hidden="true"></div>
+    <div class="slide-inner center stack">
+      <h2>Let&rsquo;s build your first one.</h2>
+      <p class="lead">Your first Digital Employee can be live in&nbsp;30&nbsp;days.</p>
+      <p>Call us.</p>
+      <div>
+        <a class="cta-phone" href="tel:+972528834558" aria-label="Call Mark Levi at +972 52 883 4558">
+          <svg aria-hidden="true"><use href="#ic-phone"/></svg>
+          <span>+972&#8209;52&#8209;883&#8209;4558</span>
+        </a>
+      </div>
+      <img class="mlc-mark" src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNzYwIiBoZWlnaHQ9IjMwMCIgdmlld0JveD0iMCAwIDc2MCAzMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxjaXJjbGUgY3g9IjEyNi41IiBjeT0iMTcyLjUiIHI9IjkiIGZpbGw9IndoaXRlIi8+CjxjaXJjbGUgY3g9IjEyNi41IiBjeT0iMTk1Ljc1IiByPSI5IiBmaWxsPSJ3aGl0ZSIvPgo8Y2lyY2xlIGN4PSIxMjYuNSIgY3k9IjIxOSIgcj0iOSIgZmlsbD0id2hpdGUiLz4KPGNpcmNsZSBjeD0iMTI2LjUiIGN5PSIyNDIuMjUiIHI9IjkiIGZpbGw9IndoaXRlIi8+CjxjaXJjbGUgY3g9IjEyNi41IiBjeT0iMjY1LjUiIHI9IjkiIGZpbGw9IndoaXRlIi8+CjxjaXJjbGUgY3g9IjkiIGN5PSI5IiByPSI5IiB0cmFuc2Zvcm09Im1hdHJpeCgtMSAwIDAgMSA4OS41IDE2My41KSIgZmlsbD0id2hpdGUiLz4KPGNpcmNsZSBjeD0iOCIgY3k9IjgiIHI9IjgiIHRyYW5zZm9ybT0ibWF0cml4KC0xIDAgMCAxIDg4LjUgMTg3Ljc1KSIgZmlsbD0id2hpdGUiLz4KPGNpcmNsZSBjeD0iNiIgY3k9IjYiIHI9IjYiIHRyYW5zZm9ybT0ibWF0cml4KC0xIDAgMCAxIDg2LjUgMjEzKSIgZmlsbD0id2hpdGUiLz4KPGNpcmNsZSBjeD0iNC41IiBjeT0iNC41IiByPSI0LjUiIHRyYW5zZm9ybT0ibWF0cml4KC0xIDAgMCAxIDg1IDIzNy43NSkiIGZpbGw9IndoaXRlIi8+CjxjaXJjbGUgY3g9IjIuNSIgY3k9IjIuNSIgcj0iMi41IiB0cmFuc2Zvcm09Im1hdHJpeCgtMSAwIDAgMSA4MyAyNjMpIiBmaWxsPSJ3aGl0ZSIvPgo8Y2lyY2xlIGN4PSIxNDkuNSIgY3k9IjE0OS41IiByPSI5IiBmaWxsPSJ3aGl0ZSIvPgo8Y2lyY2xlIGN4PSIxNDkuNSIgY3k9IjE3Mi43NSIgcj0iOSIgZmlsbD0id2hpdGUiLz4KPGNpcmNsZSBjeD0iMTQ5LjUiIGN5PSIxOTYiIHI9IjkiIGZpbGw9IndoaXRlIi8+CjxjaXJjbGUgY3g9IjE0OS41IiBjeT0iMjE5LjI1IiByPSI5IiBmaWxsPSJ3aGl0ZSIvPgo8Y2lyY2xlIGN4PSIxNDkuNSIgY3k9IjI0Mi41IiByPSI5IiBmaWxsPSJ3aGl0ZSIvPgo8Y2lyY2xlIGN4PSI5IiBjeT0iOSIgcj0iOSIgdHJhbnNmb3JtPSJtYXRyaXgoLTEgMCAwIDEgNjYuNSAxNDAuNSkiIGZpbGw9IndoaXRlIi8+CjxjaXJjbGUgY3g9IjgiIGN5PSI4IiByPSI4IiB0cmFuc2Zvcm09Im1hdHJpeCgtMSAwIDAgMSA2NS41IDE2NC43NSkiIGZpbGw9IndoaXRlIi8+CjxjaXJjbGUgY3g9IjYiIGN5PSI2IiByPSI2IiB0cmFuc2Zvcm09Im1hdHJpeCgtMSAwIDAgMSA2My41IDE5MCkiIGZpbGw9IndoaXRlIi8+CjxjaXJjbGUgY3g9IjQuNSIgY3k9IjQuNSIgcj0iNC41IiB0cmFuc2Zvcm09Im1hdHJpeCgtMSAwIDAgMSA2MiAyMTQuNzUpIiBmaWxsPSJ3aGl0ZSIvPgo8Y2lyY2xlIGN4PSIyLjUiIGN5PSIyLjUiIHI9IjIuNSIgdHJhbnNmb3JtPSJtYXRyaXgoLTEgMCAwIDEgNjAgMjQwKSIgZmlsbD0id2hpdGUiLz4KPGNpcmNsZSBjeD0iMTcyLjUiIGN5PSIxMjYuNSIgcj0iOSIgZmlsbD0id2hpdGUiLz4KPGNpcmNsZSBjeD0iMTcyLjUiIGN5PSIxNDkuNzUiIHI9IjkiIGZpbGw9IndoaXRlIi8+CjxjaXJjbGUgY3g9IjE3Mi41IiBjeT0iMTczIiByPSI5IiBmaWxsPSJ3aGl0ZSIvPgo8Y2lyY2xlIGN4PSIxNzIuNSIgY3k9IjE5Ni4yNSIgcj0iOSIgZmlsbD0id2hpdGUiLz4KPGNpcmNsZSBjeD0iMTcyLjUiIGN5PSIyMTkuNSIgcj0iOSIgZmlsbD0id2hpdGUiLz4KPGNpcmNsZSBjeD0iOSIgY3k9IjkiIHI9IjkiIHRyYW5zZm9ybT0ibWF0cml4KC0xIDAgMCAxIDQzLjUgMTE3LjUpIiBmaWxsPSJ3aGl0ZSIvPgo8Y2lyY2xlIGN4PSI4IiBjeT0iOCIgcj0iOCIgdHJhbnNmb3JtPSJtYXRyaXgoLTEgMCAwIDEgNDIuNSAxNDEuNzUpIiBmaWxsPSJ3aGl0ZSIvPgo8Y2lyY2xlIGN4PSI2IiBjeT0iNiIgcj0iNiIgdHJhbnNmb3JtPSJtYXRyaXgoLTEgMCAwIDEgNDAuNSAxNjcpIiBmaWxsPSJ3aGl0ZSIvPgo8Y2lyY2xlIGN4PSI0LjUiIGN5PSI0LjUiIHI9IjQuNSIgdHJhbnNmb3JtPSJtYXRyaXgoLTEgMCAwIDEgMzkgMTkxLjc1KSIgZmlsbD0id2hpdGUiLz4KPGNpcmNsZSBjeD0iMi41IiBjeT0iMi41IiByPSIyLjUiIHRyYW5zZm9ybT0ibWF0cml4KC0xIDAgMCAxIDM3IDIxNykiIGZpbGw9IndoaXRlIi8+CjxjaXJjbGUgY3g9IjE5NS41IiBjeT0iMTAyLjUiIHI9IjkiIGZpbGw9IndoaXRlIi8+CjxjaXJjbGUgY3g9IjE5NS41IiBjeT0iMTI1Ljc1IiByPSI5IiBmaWxsPSJ3aGl0ZSIvPgo8Y2lyY2xlIGN4PSIxOTUuNSIgY3k9IjE0OSIgcj0iOSIgZmlsbD0id2hpdGUiLz4KPGNpcmNsZSBjeD0iMTk1LjUiIGN5PSIxNzIuMjUiIHI9IjkiIGZpbGw9IndoaXRlIi8+CjxjaXJjbGUgY3g9IjE5NS41IiBjeT0iMTk1LjUiIHI9IjkiIGZpbGw9IndoaXRlIi8+CjxjaXJjbGUgY3g9IjkiIGN5PSI5IiByPSI5IiB0cmFuc2Zvcm09Im1hdHJpeCgtMSAwIDAgMSAyMC41IDkzLjUpIiBmaWxsPSJ3aGl0ZSIvPgo8Y2lyY2xlIGN4PSI4IiBjeT0iOCIgcj0iOCIgdHJhbnNmb3JtPSJtYXRyaXgoLTEgMCAwIDEgMTkuNSAxMTcuNzUpIiBmaWxsPSJ3aGl0ZSIvPgo8Y2lyY2xlIGN4PSI2IiBjeT0iNiIgcj0iNiIgdHJhbnNmb3JtPSJtYXRyaXgoLTEgMCAwIDEgMTcuNSAxNDMpIiBmaWxsPSJ3aGl0ZSIvPgo8Y2lyY2xlIGN4PSI0LjUiIGN5PSI0LjUiIHI9IjQuNSIgdHJhbnNmb3JtPSJtYXRyaXgoLTEgMCAwIDEgMTYgMTY3Ljc1KSIgZmlsbD0id2hpdGUiLz4KPGNpcmNsZSBjeD0iMi41IiBjeT0iMi41IiByPSIyLjUiIHRyYW5zZm9ybT0ibWF0cml4KC0xIDAgMCAxIDE0IDE5MykiIGZpbGw9IndoaXRlIi8+CjxjaXJjbGUgY3g9IjEwMy41IiBjeT0iMTk1LjUiIHI9IjkiIGZpbGw9IndoaXRlIi8+CjxjaXJjbGUgY3g9IjEwMy41IiBjeT0iMjE4Ljc1IiByPSI5IiBmaWxsPSJ3aGl0ZSIvPgo8Y2lyY2xlIGN4PSIxMDMuNSIgY3k9IjI0MiIgcj0iOSIgZmlsbD0id2hpdGUiLz4KPGNpcmNsZSBjeD0iMTAzLjUiIGN5PSIyNjUuMjUiIHI9IjkiIGZpbGw9IndoaXRlIi8+CjxjaXJjbGUgY3g9IjEwMy41IiBjeT0iMjg4LjUiIHI9IjkiIGZpbGw9IndoaXRlIi8+CjxjaXJjbGUgY3g9IjEwMy41IiBjeT0iMTEuNSIgcj0iMi41IiBmaWxsPSJ3aGl0ZSIvPgo8Y2lyY2xlIGN4PSIxMDMuNSIgY3k9IjM0LjUiIHI9IjIuNSIgZmlsbD0id2hpdGUiLz4KPGNpcmNsZSBjeD0iMTAzLjUiIGN5PSI1Ny41IiByPSIyLjUiIGZpbGw9IndoaXRlIi8+CjxjaXJjbGUgY3g9IjEwMy41IiBjeT0iODAuNSIgcj0iMi41IiBmaWxsPSJ3aGl0ZSIvPgo8Y2lyY2xlIGN4PSIxMDMuNSIgY3k9IjEwMy41IiByPSIyLjUiIGZpbGw9IndoaXRlIi8+CjxjaXJjbGUgY3g9IjEwMy41IiBjeT0iMTI2LjUiIHI9IjIuNSIgZmlsbD0id2hpdGUiLz4KPGNpcmNsZSBjeD0iMTAzLjUiIGN5PSIxNDkuNSIgcj0iMi41IiBmaWxsPSJ3aGl0ZSIvPgo8Y2lyY2xlIGN4PSIxMDMuNSIgY3k9IjE3Mi41IiByPSIyLjUiIGZpbGw9IndoaXRlIi8+CjxjaXJjbGUgY3g9IjEyNi41IiBjeT0iMzQuNSIgcj0iMi41IiBmaWxsPSJ3aGl0ZSIvPgo8Y2lyY2xlIGN4PSIxMjYuNSIgY3k9IjU3LjUiIHI9IjIuNSIgZmlsbD0id2hpdGUiLz4KPGNpcmNsZSBjeD0iMTI2LjUiIGN5PSI4MC41IiByPSIyLjUiIGZpbGw9IndoaXRlIi8+CjxjaXJjbGUgY3g9IjEyNi41IiBjeT0iMTAzLjUiIHI9IjIuNSIgZmlsbD0id2hpdGUiLz4KPGNpcmNsZSBjeD0iMTI2LjUiIGN5PSIxMjYuNSIgcj0iMi41IiBmaWxsPSJ3aGl0ZSIvPgo8Y2lyY2xlIGN4PSIxMjYuNSIgY3k9IjE0OS41IiByPSIyLjUiIGZpbGw9IndoaXRlIi8+CjxjaXJjbGUgY3g9IjIuNSIgY3k9IjIuNSIgcj0iMi41IiB0cmFuc2Zvcm09Im1hdHJpeCgtMSAwIDAgMSA4MyAzMikiIGZpbGw9IndoaXRlIi8+CjxjaXJjbGUgY3g9IjIuNSIgY3k9IjIuNSIgcj0iMi41IiB0cmFuc2Zvcm09Im1hdHJpeCgtMSAwIDAgMSA4MyA1NSkiIGZpbGw9IndoaXRlIi8+CjxjaXJjbGUgY3g9IjIuNSIgY3k9IjIuNSIgcj0iMi41IiB0cmFuc2Zvcm09Im1hdHJpeCgtMSAwIDAgMSA4MyA3OCkiIGZpbGw9IndoaXRlIi8+CjxjaXJjbGUgY3g9IjIuNSIgY3k9IjIuNSIgcj0iMi41IiB0cmFuc2Zvcm09Im1hdHJpeCgtMSAwIDAgMSA4MyAxMDEpIiBmaWxsPSJ3aGl0ZSIvPgo8Y2lyY2xlIGN4PSIyLjUiIGN5PSIyLjUiIHI9IjIuNSIgdHJhbnNmb3JtPSJtYXRyaXgoLTEgMCAwIDEgODMgMTI0KSIgZmlsbD0id2hpdGUiLz4KPGNpcmNsZSBjeD0iMi41IiBjeT0iMi41IiByPSIyLjUiIHRyYW5zZm9ybT0ibWF0cml4KC0xIDAgMCAxIDgzIDE0NykiIGZpbGw9IndoaXRlIi8+CjxjaXJjbGUgY3g9IjE0OS41IiBjeT0iNTguNSIgcj0iMi41IiBmaWxsPSJ3aGl0ZSIvPgo8Y2lyY2xlIGN4PSIxNDkuNSIgY3k9IjgxLjUiIHI9IjIuNSIgZmlsbD0id2hpdGUiLz4KPGNpcmNsZSBjeD0iMTQ5LjUiIGN5PSIxMDQuNSIgcj0iMi41IiBmaWxsPSJ3aGl0ZSIvPgo8Y2lyY2xlIGN4PSIxNDkuNSIgY3k9IjEyNy41IiByPSIyLjUiIGZpbGw9IndoaXRlIi8+CjxjaXJjbGUgY3g9IjE0OS41IiBjeT0iMTUwLjUiIHI9IjIuNSIgZmlsbD0id2hpdGUiLz4KPGNpcmNsZSBjeD0iMTQ5LjUiIGN5PSIxNzMuNSIgcj0iMi41IiBmaWxsPSJ3aGl0ZSIvPgo8Y2lyY2xlIGN4PSIyLjUiIGN5PSIyLjUiIHI9IjIuNSIgdHJhbnNmb3JtPSJtYXRyaXgoLTEgMCAwIDEgNjAgNTYpIiBmaWxsPSJ3aGl0ZSIvPgo8Y2lyY2xlIGN4PSIyLjUiIGN5PSIyLjUiIHI9IjIuNSIgdHJhbnNmb3JtPSJtYXRyaXgoLTEgMCAwIDEgNjAgNzkpIiBmaWxsPSJ3aGl0ZSIvPgo8Y2lyY2xlIGN4PSIyLjUiIGN5PSIyLjUiIHI9IjIuNSIgdHJhbnNmb3JtPSJtYXRyaXgoLTEgMCAwIDEgNjAgMTAyKSIgZmlsbD0id2hpdGUiLz4KPGNpcmNsZSBjeD0iMi41IiBjeT0iMi41IiByPSIyLjUiIHRyYW5zZm9ybT0ibWF0cml4KC0xIDAgMCAxIDYwIDEyNSkiIGZpbGw9IndoaXRlIi8+CjxjaXJjbGUgY3g9IjE3Mi41IiBjeT0iODEuNSIgcj0iMi41IiBmaWxsPSJ3aGl0ZSIvPgo8Y2lyY2xlIGN4PSIxNzIuNSIgY3k9IjEwNC41IiByPSIyLjUiIGZpbGw9IndoaXRlIi8+CjxjaXJjbGUgY3g9IjIuNSIgY3k9IjIuNSIgcj0iMi41IiB0cmFuc2Zvcm09Im1hdHJpeCgtMSAwIDAgMSAzNyA3OSkiIGZpbGw9IndoaXRlIi8+CjxjaXJjbGUgY3g9IjIuNSIgY3k9IjIuNSIgcj0iMi41IiB0cmFuc2Zvcm09Im1hdHJpeCgtMSAwIDAgMSAzNyAxMDIpIiBmaWxsPSJ3aGl0ZSIvPgo8cGF0aCBkPSJNNzI0LjI1NiA5Mi4zMTY3SDc0Ny44ODFWMjE0LjgxN0g3MjQuMjU2VjkyLjMxNjdaIiBmaWxsPSJ3aGl0ZSIvPgo8cGF0aCBkPSJNNjE3LjI1OCA5Mi4zMTY3QzYzMC4zMjQgOTIuMzE2NyA2NDEuNjQxIDk0Ljg4MzMgNjUxLjIwOCAxMDAuMDE3QzY2MC44OTEgMTA1LjAzMyA2NjguNDE2IDExMi4xNSA2NzMuNzgzIDEyMS4zNjdDNjc5LjE0OSAxMzAuNTgzIDY4MS44MzMgMTQxLjQzMyA2ODEuODMzIDE1My45MTdDNjgxLjgzMyAxNjYuMjgzIDY3OS4xNDkgMTc3LjAxNyA2NzMuNzgzIDE4Ni4xMTdDNjY4LjQxNiAxOTUuMjE3IDY2MC44OTEgMjAyLjI3NSA2NTEuMjA4IDIwNy4yOTJDNjQxLjY0MSAyMTIuMzA4IDYzMC4zMjQgMjE0LjgxNyA2MTcuMjU4IDIxNC44MTdINTcxLjU4M1Y5Mi4zMTY3SDYxNy4yNThaTTYxNi41NTggMTk1LjA0MkM2MjkuNzQxIDE5NS4wNDIgNjM5Ljg5MSAxOTEuNDI1IDY0Ny4wMDggMTg0LjE5MkM2NTQuMTI0IDE3Ni44NDIgNjU3LjY4MyAxNjYuNzUgNjU3LjY4MyAxNTMuOTE3QzY1Ny42ODMgMTQwLjk2NyA2NTQuMTI0IDEzMC43NTggNjQ3LjAwOCAxMjMuMjkyQzYzOS44OTEgMTE1LjgyNSA2MjkuNzQxIDExMi4wOTIgNjE2LjU1OCAxMTIuMDkySDU5NS4yMDhWMTk1LjA0Mkg2MTYuNTU4WiIgZmlsbD0id2hpdGUiLz4KPHBhdGggZD0iTTQ3Ni43MTMgOTIuMzE2N1YxOTUuMDQySDUzMS4zMTNWMjE0LjgxN0g0NTMuMDg4VjkyLjMxNjdINDc2LjcxM1oiIGZpbGw9IndoaXRlIi8+CjxwYXRoIGQ9Ik0yOTYuNTI1IDIxNC44MTdIMjcyLjlWOTIuMzE2N0gyOTkuODVMMzM4Ljg3NSAxODQuMDE3TDM3Ny45IDkyLjMxNjdINDA0Ljg1VjIxNC44MTdIMzgxLjIyNVYxMzUuNzE3TDM0OC4xNSAyMTQuODE3SDMyOS42TDI5Ni41MjUgMTM1LjcxN1YyMTQuODE3WiIgZmlsbD0id2hpdGUiLz4KPC9zdmc+" alt="MLDI">
+    </div>
+  </section>
+
+</main>
+
+<div class="nav-zone prev" data-nav="prev" aria-hidden="true"></div>
+<div class="nav-zone next" data-nav="next" aria-hidden="true"></div>
+
+<div class="counter"><span id="cur">1</span> <span class="dim">/</span> <span id="tot">1</span></div>
+<div class="help"><kbd>&larr;</kbd><kbd>&rarr;</kbd> navigate &nbsp;&middot;&nbsp; <kbd>F</kbd> fullscreen</div>
+
+<script>
+  (function () {
+    const slides = Array.from(document.querySelectorAll('[data-slide]'));
+    const total = slides.length;
+    const curEl = document.getElementById('cur');
+    const totEl = document.getElementById('tot');
+    const bar = document.querySelector('.progress > i');
+    let idx = 0;
+    totEl.textContent = total;
+
+    function render() {
+      slides.forEach((s, i) => s.classList.toggle('active', i === idx));
+      curEl.textContent = idx + 1;
+      bar.style.width = ((idx + 1) / total * 100) + '%';
+      const hash = '#' + (idx + 1);
+      if (location.hash !== hash) history.replaceState(null, '', hash);
+    }
+    function go(n) { idx = Math.max(0, Math.min(total - 1, n)); render(); }
+    function next() { go(idx + 1); }
+    function prev() { go(idx - 1); }
+
+    document.addEventListener('keydown', e => {
+      if (e.metaKey || e.ctrlKey || e.altKey) return;
+      switch (e.key) {
+        case 'ArrowRight':
+        case 'PageDown':
+        case ' ':
+          e.preventDefault(); next(); break;
+        case 'ArrowLeft':
+        case 'PageUp':
+          e.preventDefault(); prev(); break;
+        case 'Home': go(0); break;
+        case 'End': go(total - 1); break;
+        case 'f':
+        case 'F':
+          if (!document.fullscreenElement) document.documentElement.requestFullscreen?.();
+          else document.exitFullscreen?.();
+          break;
+      }
+    });
+
+    document.querySelectorAll('[data-nav]').forEach(el => {
+      el.addEventListener('click', () => el.dataset.nav === 'next' ? next() : prev());
+    });
+
+    let touchX = null;
+    document.addEventListener('touchstart', e => { touchX = e.touches[0].clientX; }, { passive: true });
+    document.addEventListener('touchend', e => {
+      if (touchX == null) return;
+      const dx = e.changedTouches[0].clientX - touchX;
+      if (Math.abs(dx) > 50) (dx < 0 ? next : prev)();
+      touchX = null;
+    }, { passive: true });
+
+    window.addEventListener('hashchange', () => {
+      const n = parseInt((location.hash || '#1').slice(1), 10);
+      if (!isNaN(n)) go(n - 1);
+    });
+
+    const initial = parseInt((location.hash || '#1').slice(1), 10);
+    go(isNaN(initial) ? 0 : initial - 1);
+  })();
+</script>
+</body>
+</html>
