@@ -27,30 +27,25 @@ xdg-open index.html    # Linux
 | Direct link       | URL hash, e.g. `index.html#9` jumps to slide 9     |
 | Touch             | Swipe left / right                                 |
 
-## The deck (22 slides)
+## The deck (15 slides)
 
-1. Cover — *Get back the hours your business quietly takes from you.*
-2. The admin runs you (the invisible work, 10–20 hrs/week)
-3. It's not your craft, but it never stops
-4. What if it just got handled? — *That's Nora.*
-5. What Nora is — a personal AI agent in your phone
-6. Yours, not theirs — a private agent for you, not a client chatbot
-7. Works inside the tools you already use
-8. Meet **Nora**
-9. Morning briefing
-10. Client memory — remembers your people
-11. What Nora keeps on every client
-12. Draft replies — in your voice, you send
-13. Reminders — who, when, why
-14. Memory for money
-15. Noise filter
-16. Voice or text, anywhere
-17. One assistant, your entire operation
-18. How we set up your Nora (5 steps)
-19. Privacy & control
-20. Investment & timeline
-21. Why now
-22. Close — *Let's set up your Nora.*
+A direct, founder-to-founder story, built to be felt:
+
+1. Cover — **Nora**, your personal AI assistant
+2. You didn't start your business to become its admin
+3. You know the feeling (the invoice, the forgotten name, the cold lead)
+4. From the founder — *"I built Nora because I needed her."*
+5. Meet Nora — what she is
+6. She lives in the tools you already use
+7. Every morning — the briefing
+8. Before every call — she remembers everyone
+9. All day long — drafts in your voice, you send
+10. In the background — she catches what you'd have dropped
+11. Getting started (set up for you, live in 30 days)
+12. Your call, always — privacy & trust
+13. What it costs
+14. Why now
+15. Close — *"Let's give you your time back."*
 
 ## Design system
 
