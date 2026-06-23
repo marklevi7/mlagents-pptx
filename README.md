@@ -32,7 +32,7 @@ xdg-open index.html    # Linux
 A direct, founder-to-founder story, built to be felt:
 
 1. Cover — **Nora**, your personal AI assistant
-2. You didn't start your business to become its admin
+2. You didn't start your business to become its back office
 3. You know the feeling (the invoice, the forgotten name, the cold lead)
 4. From the founder — *"I built Nora because I needed her."*
 5. Meet Nora — what she is
