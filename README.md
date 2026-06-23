@@ -42,7 +42,7 @@ A direct, founder-to-founder story, built to be felt:
 9. All day long — drafts in your voice, you send
 10. In the background — she catches what you'd have dropped
 11. Getting started (set up for you, live in 30 days)
-12. Your call, always — privacy & trust
+12. Security & compliance (SOC 2, GDPR, HIPAA, ISO, EU AI Act)
 13. What it costs
 14. Why now
 15. Close — *"Let's give you your time back."*
