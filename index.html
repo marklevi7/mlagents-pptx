@@ -650,7 +650,7 @@
 
   /* CHROME */
   .progress { position: fixed; top: 0; left: 0; right: 0; height: 2px; z-index: 20; pointer-events: none; }
-  .progress > i { display: block; height: 100%; background: var(--faint); width: 0%; transition: width 220ms ease; }
+  .progress > i { display: block; height: 100%; width: 0%; background: linear-gradient(90deg, #1e64ff 0%, #8a00ff 100%); background-size: 100vw 100%; background-repeat: no-repeat; transition: width 220ms ease; }
   .counter {
     position: fixed; bottom: 22px; right: 26px;
     color: var(--muted); font-size: 13px;
@@ -678,9 +678,8 @@
     .help { display: none; }
     .counter { bottom: 14px; right: 16px; }
 
-    /* Brighter, thicker progress bar on mobile */
+    /* Thicker progress bar on mobile */
     .progress { height: 3px; }
-    .progress > i { background: var(--dim); }
 
     /* More air between stacked elements */
     .stack > * + * { margin-top: clamp(18px, 3.6vw, 26px); }
