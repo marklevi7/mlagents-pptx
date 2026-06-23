@@ -16,6 +16,20 @@ Every change the user requests bumps an internal **collaboration version number*
 > user says otherwise, do not assume bumping the collaboration version also
 > changes that visible tag.
 
+## Preview-link rule (MANDATORY)
+
+Before giving the user any preview link, ALWAYS open/fetch that exact link and
+verify its contents match the latest change. Only hand over a link after
+confirming it serves the current version. Never give an unverified link.
+
+- Use **commit-pinned** links to avoid stale CDN caches:
+  `https://rawcdn.githack.com/marklevi7/mlagents-pptx/<FULL_COMMIT_SHA>/index.html`
+  (the `<SHA>` is immutable, so each link is freshly cached and never stale).
+- Do NOT hand out `raw.githack.com/.../<branch>/index.html` branch links — they
+  cache aggressively and serve outdated content.
+- Verification step: `curl` the link and grep for text from the newest edit;
+  confirm it appears before sending.
+
 ## Project
 
 Single-file HTML presentation. `index.html` is the live deck. See `README.md`.
