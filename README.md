@@ -41,7 +41,7 @@ A direct, founder-to-founder story, built to be felt:
 8. Before every call — she remembers everyone
 9. All day long — drafts in your voice, you send
 10. In the background — she catches what you'd have dropped
-11. Getting started (set up for you, live in 30 days)
+11. Getting started (two-hour Zoom setup, then she's yours)
 12. Security & compliance (SOC 2, GDPR, HIPAA, ISO, EU AI Act)
 13. What it costs
 14. Why now
