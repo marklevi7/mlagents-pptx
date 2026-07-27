@@ -761,18 +761,25 @@
   .cover-foot .tag { margin-top: 0; }
   .cover-foot .brand-line { margin: 0; }
   .restart {
-    display: inline-flex; align-items: center; gap: 8px;
-    margin-top: clamp(20px, 3vw, 40px);
+    position: fixed;
+    bottom: 18px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 15;
+    display: inline-flex; align-items: center; gap: 7px;
     color: var(--muted);
-    font-size: clamp(14px, 1.4vw, 18px);
+    font-size: 13px;
     font-weight: 500;
+    letter-spacing: 0.02em;
     text-decoration: none;
     border: 1px solid var(--line-2);
     border-radius: 999px;
-    padding: clamp(8px,1vw,12px) clamp(16px,1.8vw,24px);
+    padding: 5px 14px;
+    background: rgba(11,9,16,0.55);
     transition: color 180ms ease, border-color 180ms ease, background 180ms ease;
+    -webkit-tap-highlight-color: transparent;
   }
-  .restart:hover { color: var(--text); border-color: var(--soft); background: rgba(255,255,255,0.04); }
+  .restart:hover { color: var(--text); border-color: var(--soft); background: rgba(255,255,255,0.06); }
 </style>
 </head>
 <body>
@@ -1148,7 +1155,9 @@
   </section>
 
   <!-- 4 — What Maya is -->
-  <section class="slide" data-slide>
+  <section class="slide vcenter" data-slide>
+    <div class="aurora-top" aria-hidden="true"></div>
+    <div class="aurora-bottom" aria-hidden="true"></div>
     <div class="slide-inner center stack">
       <svg class="face-lg" aria-hidden="true"><use href="#face-dana"/></svg>
       <div class="eyebrow">Meet Maya</div>
