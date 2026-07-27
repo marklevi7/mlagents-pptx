@@ -6,6 +6,9 @@
 <meta name="theme-color" content="#0b0910">
 <meta name="color-scheme" content="dark">
 <title>Maya AI Assistant</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:wght@600&family=Cormorant+Garamond:ital,wght@1,600&family=Fraunces:wght@600&family=Marcellus&family=Playfair+Display:wght@600&family=Syne:wght@700&display=swap" rel="stylesheet">
 <style>
   :root {
     --bg: #0d0c0b;
@@ -206,7 +209,7 @@
     font-weight: 600;
     margin-bottom: clamp(28px, 4vw, 56px);
   }
-  .cover h1 { letter-spacing: -0.04em; }
+  .cover h1 { letter-spacing: -0.04em; font-size: clamp(72px, 18vw, 168px); font-family: 'Playfair Display', serif; }
   .bg-halftone {
     position: absolute;
     left: 0;
@@ -219,7 +222,8 @@
   }
   .bg-halftone.bottom { bottom: 0; }
   .bg-halftone.top { top: 0; }
-  .cover .slide-inner { position: relative; z-index: 1; }
+  .cover .slide-inner { position: relative; z-index: 12; pointer-events: none; }
+  .cover .font-switch { pointer-events: auto; }
   .cover .tag {
     color: var(--muted);
     font-weight: 600;
@@ -780,6 +784,22 @@
     -webkit-tap-highlight-color: transparent;
   }
   .restart:hover { color: var(--text); border-color: var(--soft); background: rgba(255,255,255,0.06); }
+  .font-switch { display: inline-flex; align-items: center; justify-content: center; gap: clamp(8px, 2.5vw, 22px); max-width: 100%; }
+  .fs-prev, .fs-next {
+    appearance: none; -webkit-appearance: none;
+    background: rgba(255,255,255,0.03); border: 1px solid var(--line-2);
+    color: var(--soft); border-radius: 50%;
+    width: clamp(38px, 10vw, 48px); height: clamp(38px, 10vw, 48px);
+    font-size: clamp(20px, 6vw, 26px); line-height: 1; cursor: pointer;
+    display: inline-flex; align-items: center; justify-content: center;
+    flex-shrink: 0; padding: 0;
+    transition: color .15s, border-color .15s, background .15s;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .fs-prev:hover, .fs-next:hover { color: var(--text); border-color: var(--soft); background: rgba(255,255,255,0.08); }
+  .fs-prev:active, .fs-next:active { transform: translateY(1px); }
+  .fs-label { color: var(--dim); font-size: clamp(11px,1.2vw,13px); letter-spacing: 0.16em; text-transform: uppercase; font-weight: 600; }
+  .fs-label .n { color: var(--soft); }
 </style>
 </head>
 <body>
@@ -1109,7 +1129,12 @@
   <section class="slide cover" data-slide>
     <div class="aurora-bottom" aria-hidden="true"></div>
     <div class="slide-inner center stack">
-      <h1>Maya</h1>
+      <div class="font-switch">
+        <button class="fs-prev" type="button" aria-label="Previous font">&#8249;</button>
+        <h1 id="cover-title">Maya</h1>
+        <button class="fs-next" type="button" aria-label="Next font">&#8250;</button>
+      </div>
+      <div class="fs-label">Font <span class="n" id="fs-num">1</span> &middot; <span id="fs-name">Playfair Display</span></div>
       <p class="lead">Reclaim your evenings by offloading emails, reports, calendar and documents to your AI assistant.</p>
     </div>
     <div class="cover-foot">
@@ -1413,6 +1438,35 @@
 
     const initial = parseInt((location.hash || '#1').slice(1), 10);
     go(isNaN(initial) ? 0 : initial - 1);
+  })();
+</script>
+<script>
+  (function () {
+    var fonts = [
+      {n:"Playfair Display", f:"'Playfair Display', serif", w:600, i:false},
+      {n:"Cormorant Garamond", f:"'Cormorant Garamond', serif", w:600, i:true},
+      {n:"Fraunces", f:"'Fraunces', serif", w:600, i:false},
+      {n:"Bodoni Moda", f:"'Bodoni Moda', serif", w:600, i:false},
+      {n:"Marcellus", f:"'Marcellus', serif", w:400, i:false},
+      {n:"Syne", f:"'Syne', sans-serif", w:700, i:false}
+    ];
+    var i = 0;
+    var t = document.getElementById('cover-title');
+    var num = document.getElementById('fs-num');
+    var nm = document.getElementById('fs-name');
+    function apply() {
+      var o = fonts[i];
+      t.style.fontFamily = o.f;
+      t.style.fontWeight = o.w;
+      t.style.fontStyle = o.i ? 'italic' : 'normal';
+      if (num) num.textContent = (i + 1);
+      if (nm) nm.textContent = o.n;
+    }
+    function go(d) { i = (i + d + fonts.length) % fonts.length; apply(); }
+    var pv = document.querySelector('.fs-prev'), nx = document.querySelector('.fs-next');
+    if (pv) pv.addEventListener('click', function (e) { e.stopPropagation(); go(-1); });
+    if (nx) nx.addEventListener('click', function (e) { e.stopPropagation(); go(1); });
+    apply();
   })();
 </script>
 </body>
