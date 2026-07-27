@@ -765,7 +765,7 @@
   .cover-foot .brand-line { margin: 0; }
   .restart {
     position: fixed;
-    bottom: 18px;
+    bottom: 86px;
     left: 50%;
     transform: translateX(-50%);
     z-index: 15;
@@ -800,6 +800,12 @@
   .fs-label { color: var(--dim); font-size: clamp(12px,1.4vw,14px); letter-spacing: 0.14em; text-transform: uppercase; font-weight: 600; }
   .fs-label .n { color: var(--soft); }
   h1, h2 { font-family: 'Syne', sans-serif; }
+  .botnav {
+    position: fixed; left: 0; right: 0; bottom: 16px;
+    display: flex; justify-content: center; gap: clamp(10px, 3vw, 16px);
+    padding: 0 14px; z-index: 20; pointer-events: none;
+  }
+  .botnav .fs-btn { pointer-events: auto; min-width: clamp(120px, 38vw, 160px); }
 </style>
 </head>
 <body>
@@ -1368,6 +1374,11 @@
 
 <div class="nav-zone prev" data-nav="prev" aria-hidden="true"></div>
 <div class="nav-zone next" data-nav="next" aria-hidden="true"></div>
+
+<div class="botnav">
+  <button class="fs-btn" data-nav="prev" type="button" aria-label="Previous slide">&#8249;&nbsp; Back</button>
+  <button class="fs-btn" data-nav="next" type="button" aria-label="Next slide">Next &nbsp;&#8250;</button>
+</div>
 
 <div class="counter"><span id="cur">1</span> <span class="dim">/</span> <span id="tot">1</span></div>
 <div class="help"><kbd>&larr;</kbd><kbd>&rarr;</kbd> navigate &nbsp;&middot;&nbsp; <kbd>F</kbd> fullscreen</div>
