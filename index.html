@@ -784,21 +784,21 @@
     -webkit-tap-highlight-color: transparent;
   }
   .restart:hover { color: var(--text); border-color: var(--soft); background: rgba(255,255,255,0.06); }
-  .font-switch { display: inline-flex; align-items: center; justify-content: center; gap: clamp(8px, 2.5vw, 22px); max-width: 100%; }
-  .fs-prev, .fs-next {
+  .font-switch { display: flex; align-items: center; justify-content: center; gap: clamp(12px, 4vw, 20px); flex-wrap: wrap; max-width: 100%; }
+  .fs-btn {
     appearance: none; -webkit-appearance: none;
-    background: rgba(255,255,255,0.03); border: 1px solid var(--line-2);
-    color: var(--soft); border-radius: 50%;
-    width: clamp(38px, 10vw, 48px); height: clamp(38px, 10vw, 48px);
-    font-size: clamp(20px, 6vw, 26px); line-height: 1; cursor: pointer;
-    display: inline-flex; align-items: center; justify-content: center;
-    flex-shrink: 0; padding: 0;
-    transition: color .15s, border-color .15s, background .15s;
-    -webkit-tap-highlight-color: transparent;
+    background: rgba(255,255,255,0.05); border: 1px solid var(--line-2);
+    color: var(--text); border-radius: 999px;
+    min-height: 58px; min-width: clamp(124px, 40vw, 168px);
+    padding: 0 clamp(24px, 7vw, 36px);
+    font-size: clamp(17px, 4.6vw, 21px); font-weight: 600; line-height: 1;
+    cursor: pointer; display: inline-flex; align-items: center; justify-content: center;
+    transition: color .15s, border-color .15s, background .15s, transform .1s;
+    -webkit-tap-highlight-color: transparent; touch-action: manipulation;
   }
-  .fs-prev:hover, .fs-next:hover { color: var(--text); border-color: var(--soft); background: rgba(255,255,255,0.08); }
-  .fs-prev:active, .fs-next:active { transform: translateY(1px); }
-  .fs-label { color: var(--dim); font-size: clamp(11px,1.2vw,13px); letter-spacing: 0.16em; text-transform: uppercase; font-weight: 600; }
+  .fs-btn:hover { border-color: var(--soft); background: rgba(255,255,255,0.09); }
+  .fs-btn:active { transform: translateY(1px); background: rgba(255,255,255,0.15); }
+  .fs-label { color: var(--dim); font-size: clamp(12px,1.4vw,14px); letter-spacing: 0.14em; text-transform: uppercase; font-weight: 600; }
   .fs-label .n { color: var(--soft); }
 </style>
 </head>
@@ -1129,12 +1129,12 @@
   <section class="slide cover" data-slide>
     <div class="aurora-bottom" aria-hidden="true"></div>
     <div class="slide-inner center stack">
-      <div class="font-switch">
-        <button class="fs-prev" type="button" aria-label="Previous font">&#8249;</button>
-        <h1 id="cover-title">Maya</h1>
-        <button class="fs-next" type="button" aria-label="Next font">&#8250;</button>
-      </div>
+      <h1 id="cover-title">Maya</h1>
       <div class="fs-label">Font <span class="n" id="fs-num">1</span> &middot; <span id="fs-name">Playfair Display</span></div>
+      <div class="font-switch">
+        <button class="fs-prev fs-btn" type="button" aria-label="Previous font">&#8249;&nbsp; Back</button>
+        <button class="fs-next fs-btn" type="button" aria-label="Next font">Next &nbsp;&#8250;</button>
+      </div>
       <p class="lead">Reclaim your evenings by offloading emails, reports, calendar and documents to your AI assistant.</p>
     </div>
     <div class="cover-foot">
