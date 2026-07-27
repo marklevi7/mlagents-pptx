@@ -8,7 +8,7 @@
 <title>Maya AI Assistant</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:wght@600&family=Cormorant+Garamond:ital,wght@1,600&family=Fraunces:wght@600&family=Marcellus&family=Playfair+Display:wght@600&family=Syne:wght@700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@700&family=Darker+Grotesque:wght@700&family=Familjen+Grotesque:wght@600&family=Outfit:wght@600&family=Sora:wght@600&family=Space+Grotesk:wght@600&family=Syncopate:wght@700&family=Syne:wght@700&family=Unbounded:wght@600&display=swap" rel="stylesheet">
 <style>
   :root {
     --bg: #0d0c0b;
@@ -209,7 +209,7 @@
     font-weight: 600;
     margin-bottom: clamp(28px, 4vw, 56px);
   }
-  .cover h1 { letter-spacing: -0.04em; font-size: clamp(72px, 18vw, 168px); font-family: 'Playfair Display', serif; }
+  .cover h1 { letter-spacing: -0.04em; font-size: clamp(72px, 18vw, 168px); font-family: 'Syne', sans-serif; }
   .bg-halftone {
     position: absolute;
     left: 0;
@@ -1130,7 +1130,7 @@
     <div class="aurora-bottom" aria-hidden="true"></div>
     <div class="slide-inner center stack">
       <h1 id="cover-title">Maya</h1>
-      <div class="fs-label">Font <span class="n" id="fs-num">1</span> &middot; <span id="fs-name">Playfair Display</span></div>
+      <div class="fs-label">Font <span class="n" id="fs-num">1</span> &middot; <span id="fs-name">Syne</span></div>
       <div class="font-switch">
         <button class="fs-prev fs-btn" type="button" aria-label="Previous font">&#8249;&nbsp; Back</button>
         <button class="fs-next fs-btn" type="button" aria-label="Next font">Next &nbsp;&#8250;</button>
@@ -1443,12 +1443,15 @@
 <script>
   (function () {
     var fonts = [
-      {n:"Playfair Display", f:"'Playfair Display', serif", w:600, i:false},
-      {n:"Cormorant Garamond", f:"'Cormorant Garamond', serif", w:600, i:true},
-      {n:"Fraunces", f:"'Fraunces', serif", w:600, i:false},
-      {n:"Bodoni Moda", f:"'Bodoni Moda', serif", w:600, i:false},
-      {n:"Marcellus", f:"'Marcellus', serif", w:400, i:false},
-      {n:"Syne", f:"'Syne', sans-serif", w:700, i:false}
+      {n:"Syne", f:"'Syne', sans-serif", w:700, i:false},
+      {n:"Space Grotesk", f:"'Space Grotesk', sans-serif", w:600, i:false},
+      {n:"Bricolage Grotesque", f:"'Bricolage Grotesque', sans-serif", w:700, i:false},
+      {n:"Unbounded", f:"'Unbounded', sans-serif", w:600, i:false},
+      {n:"Sora", f:"'Sora', sans-serif", w:600, i:false},
+      {n:"Familjen Grotesk", f:"'Familjen Grotesque', sans-serif", w:600, i:false},
+      {n:"Syncopate", f:"'Syncopate', sans-serif", w:700, i:false},
+      {n:"Darker Grotesque", f:"'Darker Grotesque', sans-serif", w:700, i:false},
+      {n:"Outfit", f:"'Outfit', sans-serif", w:600, i:false}
     ];
     var i = 0;
     var t = document.getElementById('cover-title');
