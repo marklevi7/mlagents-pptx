@@ -30,6 +30,13 @@ confirming it serves the current version. Never give an unverified link.
 - Verification step: `curl` the link and grep for text from the newest edit;
   confirm it appears before sending.
 
+## PUBLIC / CLIENT-FACING (MANDATORY, now and forever)
+
+This deck is a LIVE PUBLIC website at **https://nora.marklevi.com** — client-facing,
+not internal. No internal-only labels, version tags, codenames, or notes on any
+slide. Brand is **Mark Levi Digital** (logo wordmark: **MLD**). Flag anything that
+looks internal or unprofessional for a public audience.
+
 ## Project
 
 Single-file HTML presentation. `index.html` is the live deck. See `README.md`.
