@@ -807,6 +807,17 @@
   .botnav .fs-btn { pointer-events: auto; min-width: clamp(120px, 38vw, 160px); }
   .close h2 { font-size: clamp(46px, 8.5vw, 112px); }
   .slide.close, .slide.cover { padding-bottom: clamp(104px, 16vh, 150px); }
+  .founder-photo { width: clamp(100px, 12vw, 152px); height: clamp(100px, 12vw, 152px); border-radius: 50%; border: 2px solid var(--line-2); background: rgba(255,255,255,0.05); display: flex; align-items: center; justify-content: center; overflow: hidden; filter: grayscale(1) contrast(1.05); }
+  .founder-photo svg { width: 66%; height: 66%; color: var(--muted); display: block; }
+  .founder-photo img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  h2.quote { font-style: italic; }
+  .founder-attr { color: var(--muted); font-weight: 600; letter-spacing: 0.03em; font-size: clamp(16px, 1.8vw, 22px); }
+  .avatar-live { position: relative; width: clamp(150px, 20vw, 220px); height: clamp(150px, 20vw, 220px); border-radius: 50%; border: 2px solid var(--line-2); background: rgba(255,255,255,0.03); display: flex; align-items: center; justify-content: center; margin: 0 auto clamp(18px, 2.2vw, 32px); }
+  .avatar-live .face-lg { width: 60%; margin: 0; }
+  .live-dot { position: absolute; bottom: 9%; right: 9%; width: clamp(20px, 2.6vw, 30px); height: clamp(20px, 2.6vw, 30px); background: #22c55e; border-radius: 50%; border: 3px solid var(--bg); }
+  .live-dot::after { content: ''; position: absolute; inset: 0; border-radius: 50%; animation: livepulse 1.6s ease-out infinite; }
+  @keyframes livepulse { 0% { box-shadow: 0 0 0 0 rgba(34,197,94,0.55); } 70% { box-shadow: 0 0 0 15px rgba(34,197,94,0); } 100% { box-shadow: 0 0 0 0 rgba(34,197,94,0); } }
+  .xl { font-size: clamp(42px, 7.5vw, 100px); line-height: 1.04; }
 </style>
 </head>
 <body>
@@ -1183,10 +1194,13 @@
   <!-- 3 — From the founder -->
   <section class="slide" data-slide>
     <div class="slide-inner stack">
-      <div class="eyebrow">From the founder</div>
-      <h2>I built Maya because I needed her.</h2>
+      <div class="founder-photo">
+        <svg viewBox="0 0 100 100" fill="currentColor" aria-hidden="true"><circle cx="50" cy="37" r="17"/><path d="M 20 88 C 20 67 34 59 50 59 C 66 59 80 67 80 88 Z"/></svg>
+      </div>
+      <h2 class="quote">&ldquo;I built Maya because I needed her.&rdquo;</h2>
       <p>I&rsquo;m a founder too. I was drowning in the same back-office grind &mdash; a hundred little things in my head, half of them slipping through the cracks. So I built myself a right hand that never forgets.</p>
       <p>It changed how I work. Now I&rsquo;m sharing her with you.</p>
+      <div class="founder-attr">&mdash; Mark Levi, Founder</div>
     </div>
   </section>
 
@@ -1195,7 +1209,10 @@
     <div class="aurora-top" aria-hidden="true"></div>
     <div class="aurora-bottom" aria-hidden="true"></div>
     <div class="slide-inner center stack">
-      <svg class="face-lg" aria-hidden="true"><use href="#face-dana"/></svg>
+      <div class="avatar-live">
+        <svg class="face-lg" aria-hidden="true"><use href="#face-dana"/></svg>
+        <span class="live-dot" aria-hidden="true"></span>
+      </div>
       <div class="eyebrow">Meet Maya</div>
       <h2>A personal AI assistant that lives in your phone and knows your business like no one else.</h2>
       <p class="lead">She works for you &mdash; never for your customers. Your right hand, on call around the clock.</p>
@@ -1204,8 +1221,8 @@
 
   <!-- 5 — She lives in the tools you already use -->
   <section class="slide" data-slide>
-    <div class="slide-inner center stack">
-      <h2>She lives in the tools you already use.</h2>
+    <div class="slide-inner stack">
+      <h2 class="xl">She lives in the tools you already use.</h2>
       <p>Talk to her like a person &mdash; type, or just send a voice note from the car.</p>
       <div class="platforms">
         <div class="platform"><svg class="ic-md"><use href="#ic-whatsapp"/></svg><span>WhatsApp</span></div>
