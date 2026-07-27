@@ -1,3 +1,11 @@
+## FONT ROLLBACK POINT (mandatory memory)
+
+Titles now use the **Syne** font. If the user ever asks to "go back / roll back
+the font", restore the ORIGINAL default: remove the `Syne` font-family from
+`h1, h2` (and from `.cover h1`) and delete the Google Fonts `<link>`, so titles
+return to the system sans-serif (`ui-sans-serif, -apple-system, ...`). The
+pre-font commit is **28137ed** (before any font iteration began).
+
 # Project rules — mlagents-pptx
 
 ## Versioning rule (MANDATORY)

@@ -8,7 +8,7 @@
 <title>Maya AI Assistant</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@700&family=Darker+Grotesque:wght@700&family=Familjen+Grotesque:wght@600&family=Outfit:wght@600&family=Sora:wght@600&family=Space+Grotesk:wght@600&family=Syncopate:wght@700&family=Syne:wght@700&family=Unbounded:wght@600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@500;600;700;800&display=swap" rel="stylesheet">
 <style>
   :root {
     --bg: #0d0c0b;
@@ -222,8 +222,7 @@
   }
   .bg-halftone.bottom { bottom: 0; }
   .bg-halftone.top { top: 0; }
-  .cover .slide-inner { position: relative; z-index: 12; pointer-events: none; }
-  .cover .font-switch { pointer-events: auto; }
+  .cover .slide-inner { position: relative; z-index: 1; }
   .cover .tag {
     color: var(--muted);
     font-weight: 600;
@@ -800,6 +799,7 @@
   .fs-btn:active { transform: translateY(1px); background: rgba(255,255,255,0.15); }
   .fs-label { color: var(--dim); font-size: clamp(12px,1.4vw,14px); letter-spacing: 0.14em; text-transform: uppercase; font-weight: 600; }
   .fs-label .n { color: var(--soft); }
+  h1, h2 { font-family: 'Syne', sans-serif; }
 </style>
 </head>
 <body>
@@ -1129,12 +1129,7 @@
   <section class="slide cover" data-slide>
     <div class="aurora-bottom" aria-hidden="true"></div>
     <div class="slide-inner center stack">
-      <h1 id="cover-title">Maya</h1>
-      <div class="fs-label">Font <span class="n" id="fs-num">1</span> &middot; <span id="fs-name">Syne</span></div>
-      <div class="font-switch">
-        <button class="fs-prev fs-btn" type="button" aria-label="Previous font">&#8249;&nbsp; Back</button>
-        <button class="fs-next fs-btn" type="button" aria-label="Next font">Next &nbsp;&#8250;</button>
-      </div>
+      <h1>Maya</h1>
       <p class="lead">Reclaim your evenings by offloading emails, reports, calendar and documents to your AI assistant.</p>
     </div>
     <div class="cover-foot">
@@ -1438,38 +1433,6 @@
 
     const initial = parseInt((location.hash || '#1').slice(1), 10);
     go(isNaN(initial) ? 0 : initial - 1);
-  })();
-</script>
-<script>
-  (function () {
-    var fonts = [
-      {n:"Syne", f:"'Syne', sans-serif", w:700, i:false},
-      {n:"Space Grotesk", f:"'Space Grotesk', sans-serif", w:600, i:false},
-      {n:"Bricolage Grotesque", f:"'Bricolage Grotesque', sans-serif", w:700, i:false},
-      {n:"Unbounded", f:"'Unbounded', sans-serif", w:600, i:false},
-      {n:"Sora", f:"'Sora', sans-serif", w:600, i:false},
-      {n:"Familjen Grotesk", f:"'Familjen Grotesque', sans-serif", w:600, i:false},
-      {n:"Syncopate", f:"'Syncopate', sans-serif", w:700, i:false},
-      {n:"Darker Grotesque", f:"'Darker Grotesque', sans-serif", w:700, i:false},
-      {n:"Outfit", f:"'Outfit', sans-serif", w:600, i:false}
-    ];
-    var i = 0;
-    var t = document.getElementById('cover-title');
-    var num = document.getElementById('fs-num');
-    var nm = document.getElementById('fs-name');
-    function apply() {
-      var o = fonts[i];
-      t.style.fontFamily = o.f;
-      t.style.fontWeight = o.w;
-      t.style.fontStyle = o.i ? 'italic' : 'normal';
-      if (num) num.textContent = (i + 1);
-      if (nm) nm.textContent = o.n;
-    }
-    function go(d) { i = (i + d + fonts.length) % fonts.length; apply(); }
-    var pv = document.querySelector('.fs-prev'), nx = document.querySelector('.fs-next');
-    if (pv) pv.addEventListener('click', function (e) { e.stopPropagation(); go(-1); });
-    if (nx) nx.addEventListener('click', function (e) { e.stopPropagation(); go(1); });
-    apply();
   })();
 </script>
 </body>
