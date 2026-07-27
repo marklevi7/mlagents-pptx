@@ -560,8 +560,8 @@
 
   /* DEPLOYMENT OPTIONS */
   .deploy {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
+    display: flex;
+    flex-wrap: wrap;
     gap: clamp(10px, 1.2vw, 16px);
     margin-top: clamp(10px, 1.2vw, 16px);
   }
@@ -662,7 +662,7 @@
   .progress { position: fixed; top: 0; left: 0; right: 0; height: 2px; z-index: 20; pointer-events: none; }
   .progress > i { display: block; height: 100%; width: 0%; background: linear-gradient(90deg, #1e64ff 0%, #8a00ff 100%); background-size: 100vw 100%; background-repeat: no-repeat; transition: width 220ms ease; }
   .counter {
-    position: fixed; bottom: 22px; right: 26px;
+    position: fixed; bottom: 88px; right: 26px;
     color: var(--muted); font-size: 16.25px;
     font-variant-numeric: tabular-nums;
     z-index: 15; letter-spacing: 0.04em;
@@ -686,7 +686,7 @@
   .nav-zone.next { right: 0; cursor: e-resize; }
   @media (max-width: 640px) {
     .help { display: none; }
-    .counter { bottom: 14px; right: 16px; }
+    .counter { bottom: 88px; right: 16px; }
 
     /* Thicker progress bar on mobile */
     .progress { height: 3px; }
@@ -753,7 +753,7 @@
   .cover-foot {
     position: absolute;
     left: 0; right: 0;
-    bottom: clamp(24px, 5vh, 56px);
+    bottom: clamp(92px, 14vh, 116px);
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -806,6 +806,8 @@
     padding: 0 14px; z-index: 20; pointer-events: none;
   }
   .botnav .fs-btn { pointer-events: auto; min-width: clamp(120px, 38vw, 160px); }
+  .close h2 { font-size: clamp(46px, 8.5vw, 112px); }
+  .slide.close, .slide.cover { padding-bottom: clamp(104px, 16vh, 150px); }
 </style>
 </head>
 <body>
@@ -1286,11 +1288,7 @@
       <div class="deploy">
         <div class="deploy-item">
           <svg class="ic-deploy" aria-hidden="true"><use href="#ic-cloud"/></svg>
-          <div class="deploy-label">Public Cloud</div>
-        </div>
-        <div class="deploy-item">
-          <svg class="ic-deploy" aria-hidden="true"><use href="#ic-cloud-lock"/></svg>
-          <div class="deploy-label">Private Cloud</div>
+          <div class="deploy-label">Cloud</div>
         </div>
       </div>
     </div>
@@ -1303,9 +1301,9 @@
       <h2>Priced for a small business, not an enterprise.</h2>
       <table>
         <tbody>
-          <tr><td class="stage">Setup + onboarding</td><td class="desc">We map your world, connect your tools, and teach Maya your business and your style. One-time.</td><td class="price">&#8362;&nbsp;&bull;&bull;&bull;</td></tr>
-          <tr><td class="stage">Maya, monthly</td><td class="desc">Your assistant, kept sharp and getting better as you grow.</td><td class="price">&#8362;&nbsp;&bull;&bull;&bull;&nbsp;/mo</td></tr>
-          <tr><td class="stage">AI usage</td><td class="desc">What she uses as she works. Use more, pay more.</td><td class="price">&#8362;&nbsp;&bull;&bull;&bull;&nbsp;/mo</td></tr>
+          <tr><td class="stage">Setup + onboarding</td><td class="desc">We map your world, connect your tools, and teach Maya your business and your style. One-time.</td><td class="price">$1,559</td></tr>
+          <tr><td class="stage">Maya, monthly</td><td class="desc">Your assistant, kept sharp and getting better as you grow.</td><td class="price">$179&nbsp;/mo</td></tr>
+          <tr><td class="stage">Custom development</td><td class="desc">Anything you need built, as long as you&rsquo;re paying. 10-hour minimum.</td><td class="price">$120&nbsp;/hr</td></tr>
         </tbody>
       </table>
     </div>
@@ -1353,7 +1351,7 @@
     <div class="aurora-bottom" aria-hidden="true"></div>
     <div class="slide-inner center stack">
       <h2>Let&rsquo;s give you your time back.</h2>
-      <p class="lead">Maya is yours after one call. Call me &mdash; Mark.</p>
+      <p class="lead">Deploy Maya in your business. Book a call to get started.</p>
       <div>
         <a class="cta-phone" href="tel:+972528834558" aria-label="Call Mark Levi at +972 52 883 4558">
           <svg aria-hidden="true"><use href="#ic-phone"/></svg>
